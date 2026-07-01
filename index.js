@@ -40,9 +40,6 @@ let immortal = false;
 //drop powerups rng
 let dropRNG;
 
-//singleshooter moves
-//let fireBossCooldown = 200;
-
 //sfx
 export const sfxLimit = 10;
 export let sfxPool = [];
