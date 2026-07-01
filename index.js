@@ -37,11 +37,6 @@ export let isPlayerCreated = false;
 let destroyedCounter = 0;
 let immortal = false;
 
-//moves DONT NEED THIS ANYMORE IF PLAYER CLASS MOD WORKS
-let fireCooldown = 0;
-let ultimateCooldown = 0;
-let dashCooldown = 0;
-
 //drop powerups rng
 let dropRNG;
 

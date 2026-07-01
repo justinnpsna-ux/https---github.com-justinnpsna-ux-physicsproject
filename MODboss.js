@@ -23,7 +23,7 @@ class Boss {
         this.vy = vy;
         this.ax = ax;
         this.ay = ay;
-        this.mass = Math.PI * radius * radius;
+        this.mass = 10 * Math.PI * radius * radius;
         this.enemy = true;
         this.health = Math.floor(radius) / 5;
 
