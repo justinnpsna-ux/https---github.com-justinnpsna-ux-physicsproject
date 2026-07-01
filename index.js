@@ -1,0 +1,285 @@
+import { Player, playerMoveSet } from './MODplayer.js'
+import { Circle } from './MODcircle.js'
+import { SingleShooter, SpreadShooter, ChargeHitter } from './MODboss.js'
+import { Bullet, BadBullet } from './MODbullet.js'
+import { LevelManager } from './MODlevels.js'
+import { Animate } from './MODanimate.js'
+
+import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter } from './MODlevels.js'
+
+export const canvas = document.getElementById('canvas');
+export const ctx = canvas.getContext('2d');
+
+canvas.style.backgroundColor = "#e4e4e4";
+
+//level manager
+const levelManager = new LevelManager();
+
+//animate functions
+const animateFunc = new Animate();
+
+//all button features. keep
+const freeFall = document.getElementById("freefall");
+const test = document.getElementById("test");
+const pendulum = document.getElementById("pendulum");
+const singleshooterButton = document.getElementById("singleshooter");
+const spreadshooterButton = document.getElementById("spreadshooter");
+const chargehitterButton = document.getElementById("chargehitter");
+const nextLevelButton = document.getElementById("nextLevelButton");
+const reset = document.getElementById("reset");
+
+//unique id for all circles
+export let nextCircleId = { id: 0 }; 
+
+//player
+export let interacted = true; //make this true if user clicks on screen once
+export let isPlayerCreated = false;
+let destroyedCounter = 0;
+let immortal = false;
+
+//moves DONT NEED THIS ANYMORE IF PLAYER CLASS MOD WORKS
+let fireCooldown = 0;
+let ultimateCooldown = 0;
+let dashCooldown = 0;
+
+//drop powerups rng
+let dropRNG;
+
+//singleshooter moves
+//let fireBossCooldown = 200;
+
+//sfx
+export const sfxLimit = 10;
+export let sfxPool = [];
+export let sfxPoolIndex = 0;
+
+export function playSound(fileName) {
+    let sound = sfxPool[sfxPoolIndex];
+    sound = new Audio(fileName)
+
+    sound.currentTime = 0;
+    sound.play()//.catch(err => window.alert("click first to geet soudn"));
+
+    sfxPoolIndex = (sfxPoolIndex + 1) % sfxLimit;
+}
+
+//collision feature (spatial grid)
+export const cellSize = 100;
+export const totalColumns = canvas.width / cellSize;
+export let grid = Array.from({length: totalColumns * totalColumns}, () => []);
+export let cellChecks = [
+  -totalColumns - 1, -totalColumns, -totalColumns + 1,
+  -1,                0,             1,
+  totalColumns - 1,  totalColumns,  totalColumns + 1
+];
+
+//drag feature. keep
+let clickedCircle = null;
+let lastX = 0;
+let lastY = 0;
+let lastTime = 0;
+
+//arrays
+export let faller = [];
+export let enemies = []; //use this instead of the singular arrays. for boss
+export let swinger = [];
+export let player = [];
+export let bullets = [];
+export let badBullets = [];
+
+//keys
+export const keysPressed = {
+    KeyW: false,
+    KeyA: false,
+    KeyS: false,
+    KeyD: false,
+    Space: false,
+    KeyC: false,
+    ShiftLeft: false 
+};
+
+export function getRng(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function animate() {
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'; 
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    //timer
+    document.getElementById('timer').textContent = 
+    (performance.now() / 1000).toFixed(2);
+
+    animateFunc.clearCells();
+
+    animateFunc.updatePlayer();
+
+    animateFunc.updateAll();
+
+    animateFunc.gridIndexAll();
+
+    animateFunc.collisionsAll();
+
+    animateFunc.drawFaller();
+
+    animateFunc.drawSingleShooter();
+
+    animateFunc.drawSpreadShooter();
+
+    animateFunc.drawChargeHitter();
+
+    animateFunc.drawBullets();
+
+    animateFunc.drawSwinger();
+
+    //animateFunc.filterBullets();
+    bullets = bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
+    badBullets = badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
+
+    //point system
+    handleEnemyDeath();
+    document.getElementById('counter').textContent = destroyedCounter;
+
+    //health death system
+    if (player[0].health <= 0 && !immortal) { window.alert("u dided lol....") }
+    document.getElementById('playerhealth').textContent = player[0].health;
+
+    //to check if there are no enemies to move on levels
+    levelManager.getSuccess();
+
+    requestAnimationFrame(animate);
+};
+
+//buttons
+freeFall.onclick = () => {
+    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height), getRng(10, 30), getRng(-10, 10), getRng(-10, 10), 0, 0);
+    faller.push(o);
+};
+
+test.onclick = () => {
+    let o = new Circle(getRng(200, canvas.width), getRng(150, 350), 15, 0, 0, 0, 0);
+    faller.push(o);
+};
+
+pendulum.onclick = () => {
+    let o = new Circle(300, 250, 20, 0, 0, 0, 0, Math.PI/2, 0, 0, 100) //pendulum swing soon
+    swinger.push(o);
+};
+
+singleshooterButton.onclick = () => {
+    spawnSingleShooter();
+};
+
+spreadshooterButton.onclick = () => {
+    spawnSpreadShooter();
+};
+
+chargehitterButton.onclick = () => {
+    spawnChargeHitter();
+};
+
+nextLevelButton.onclick = () => {
+    if (levelManager.nextLevel() == false) return;
+    levelManager.startCurrentLevel();
+};
+
+reset.onclick = () => {
+    faller = [];
+    enemies = [];
+};
+
+//mouse pos func and events
+function getMousePos(event) {
+    let rect = canvas.getBoundingClientRect();
+    return {
+    x: event.clientX - rect.left,
+    y: event.clientY - rect.top
+    };
+};
+
+canvas.addEventListener('mousedown', (event) => {
+    let mouse = getMousePos(event);
+    interacted = true;
+
+    clickedCircle = faller.find(o => {
+        let dx = mouse.x - o.x;
+        let dy = mouse.y - o.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+
+        return distance <= o.radius;
+  });
+
+    if (clickedCircle) {
+        clickedCircle.isDragged = true;
+        clickedCircle.vx = 0;
+        clickedCircle.vy = 0;
+    }
+});
+
+canvas.addEventListener('mousemove', (event) => {
+    let mouse = getMousePos(event);
+    let currentTime = performance.now();
+    let timeDelta = (currentTime - lastTime) / 30;
+
+    if (clickedCircle) {
+        clickedCircle.x = mouse.x;
+        clickedCircle.y = mouse.y;
+        
+        if (timeDelta > 0) {
+            clickedCircle.vx = (mouse.x - lastX) / timeDelta;
+            clickedCircle.vy = (mouse.y - lastY) / timeDelta;
+
+        }
+    }
+    lastX = mouse.x;
+    lastY = mouse.y;
+    lastTime = currentTime;
+});
+
+window.addEventListener('mouseup', () => {
+    if (clickedCircle) {
+        clickedCircle.isDragged = false;
+    }
+    clickedCircle = null;
+});
+
+window.addEventListener('keydown', (event) => {
+    if (event.code in keysPressed) {
+        keysPressed[event.code] = true;
+    }
+});
+
+window.addEventListener('keyup', (event) => {
+    if (event.code in keysPressed) {
+        keysPressed[event.code] = false;
+    }
+});
+
+//FUNCTIONSSS~~~~~~~~~~~~
+function createPlayer() {
+    if (isPlayerCreated) return;
+
+    let o = new Player(250, 250, 15, 0, 0, 0, 0, 0);
+    player.push(o);
+
+    isPlayerCreated = true;
+};
+
+function handleEnemyDeath() {
+    let oldFaller = faller.length;
+    faller = faller.filter(o => o.health > 0);
+    let newFaller = faller.length;
+    destroyedCounter += oldFaller - newFaller;
+
+    let oldEnemies = enemies.length;
+    enemies = enemies.filter(o => o.health > 0);
+    let newEnemies = enemies.length;
+    destroyedCounter += (oldEnemies - newEnemies) * 5;
+
+    if (oldFaller - newFaller > 0) playSound('SFXmimimi.mp3');
+    if (oldEnemies - newEnemies > 0) playSound('SFXdead.mp3'); //boss dead sound
+}
+
+createPlayer();
+levelManager.startCurrentLevel();
+animate();

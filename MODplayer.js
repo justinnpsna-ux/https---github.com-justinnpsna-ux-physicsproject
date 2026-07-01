@@ -1,0 +1,250 @@
+// module for player classes
+import { canvas, ctx, nextCircleId, cellSize, 
+    totalColumns, grid, cellChecks, isPlayerCreated, 
+    interacted, keysPressed } from './index.js';
+
+//arrays
+import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+
+//sound
+import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
+
+//bad bullets
+import { BadBullet, Bullet } from './MODbullet.js'
+
+export class Player {
+    constructor(x, y, radius, vx, vy, ax, ay, mass) {
+        //default
+        this.x = x;
+        this.y = y;
+        this.radius = radius;
+        this.vx = vx;
+        this.vy = vy;
+        this.ax = ax;
+        this.ay = ay;
+        this.mass = Math.PI * radius * radius;
+        this.isPlayer = true;
+        this.health = 10;
+
+        //technical
+        this.gridIndex = 0;
+        this.id = nextCircleId.id++;
+        this.damaged = false;
+        this.toDelete = false;
+        this.cooldown = 0;
+        this.damageCooldown = 0;
+        
+        //moveset
+        this.fireCooldown = 0;
+        this.ultimateCooldown = 0;
+        this.dashCooldown = 0;
+    } 
+
+    update(dt) {
+        //if (this.isDragged) return;
+        
+        this.vx += this.ax * dt;
+        this.vy += this.ay * dt;
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+    }
+
+    drawPlayer() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#7c7ce6';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    drawDamage() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#e04b4b';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    drawDirection() { //working on a noticable gun direction for further precision.
+        ctx.beginPath();
+        ctx.rect() //x, y, width, height
+        ctx.fillStyle = '#f4c5c5';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    checkBorders() {
+        let restitution = 0.8
+        if (this.y + this.radius > canvas.height) {
+            this.vy *= -restitution
+            this.y -= this.y + this.radius - canvas.height
+        } else if (this.y - this.radius < 0) {
+            this.vy *= -restitution
+            this.y += -this.y + this.radius
+        }
+
+        if (this.x + this.radius > canvas.width) {
+            this.vx *= -restitution
+            this.x -= this.x + this.radius - canvas.width 
+        } else if (this.x - this.radius < 0) {
+            this.vx *= -restitution
+            this.x += -this.x + this.radius 
+        }
+    }
+
+    getGridIndex() {
+        let col = Math.floor(this.x / cellSize);
+        let row = Math.floor(this.y / cellSize);
+
+        col = Math.max(0, Math.min(col, totalColumns - 1));
+        row = Math.max(0, Math.min(row, totalColumns - 1));
+
+        this.gridIndex = col + (row * totalColumns);
+  
+        if (grid[this.gridIndex]) {
+            grid[this.gridIndex].push(this);
+        }
+    }
+
+    checkCollisions() {
+        for (let check of cellChecks) {
+        let targetIndex = this.gridIndex + check;
+
+        // pre checks
+        if (!grid[targetIndex] || grid[targetIndex].length === 0) continue;
+        if (check === 0 && grid[targetIndex].length <= 1) continue;
+
+            for (let o of grid[targetIndex]) {
+                if (this.id <= o.id) continue;
+
+                    let dx = this.x - o.x;
+                    let dy = this.y - o.y;
+                    let distanceSq = (dx * dx) + (dy * dy);
+
+                    if (distanceSq === 0) {
+                        this.x += 0.1;
+                        continue;
+                    }
+
+                    let radiusSq = (this.radius + o.radius) * (this.radius + o.radius);
+
+                    if (distanceSq <= radiusSq) {
+                        let distance = Math.sqrt(distanceSq);
+                        let offset = (this.radius + o.radius) - distance;
+                        let directionX = dx / distance; // (-1, 1)
+                        let directionY = dy / distance; // (-1, 1)
+                    
+                        let totalMass = this.mass + o.mass;
+                        let ratioMass = offset / totalMass;
+
+                        this.x += (ratioMass) * (o.mass) * directionX;
+                        this.y += (ratioMass) * (o.mass) * directionY;
+                        o.x -= (ratioMass) * (this.mass) * directionX;
+                        o.y -= (ratioMass) * (this.mass) * directionY
+
+                        let relativeVX = this.vx - o.vx;
+                        let relativeVY = this.vy - o.vy;
+                        let velAlongNormal = (relativeVX * directionX) + (relativeVY * directionY);
+
+                        // change to dot product
+                        if (velAlongNormal < 0) {
+                            let restitution = 0.8;
+                            let impulse = -(1 + restitution) * velAlongNormal / ((1 / this.mass) +(1 / o.mass));
+
+                            this.vx += (impulse / this.mass) * directionX;
+                            this.vy += (impulse / this.mass) * directionY;
+                            o.vx -= (impulse / o.mass) * directionX;
+                            o.vy -= (impulse / o.mass) * directionY;
+                        }
+                    }
+
+                        
+            }
+        }
+    }
+}
+
+export function createPlayer() { //doesnt work because isPlayerCreated is constant when exporting
+    if (isPlayerCreated) return;
+
+    let o = new Player(250, 250, 15, 0, 0, 0, 0, 0);
+    player.push(o);
+
+    isPlayerCreated = true;
+};
+
+function shootBullet(player) {
+    if (!isPlayerCreated || !interacted) return;
+    let speed = 300;
+
+    let angle = Math.atan2(player.vy, player.vx);
+
+    if (player.vx === 0 && player.vy === 0) {
+        angle = 0; 
+    }
+    let bvx = Math.cos(angle) * speed;
+    let bvy = Math.sin(angle) * speed;
+    let o = new Bullet(player.x + (player.radius + 5) * Math.cos(angle), 
+    player.y + (player.radius + 5) * Math.sin(angle), 3, bvx, bvy, 0, 0, 0);
+    o.mass = 0.1;
+
+    bullets.push(o);
+    playSound('SFXpew.mp3');
+};
+
+function shootUltimate(player) {
+    if (!isPlayerCreated || !interacted) return;
+
+    let o = new Bullet(player.x, 
+    player.y, 85, 0, 0, 0, 0, 0);
+    
+    o.mass = 100;
+    o.toDelete = true;
+    o.ultimate = true;
+    bullets.push(o);
+    playSound('SFXboom.mp3');
+    playSound('SFXeireen.mp3');
+};
+
+function doDash(player) {
+    if (!isPlayerCreated || !interacted) return;
+    let dashDistance = 200; 
+
+    let angle = Math.atan2(player.vy, player.vx);
+
+    if (player.vx === 0 && player.vy === 0) {
+        angle = 0; 
+    };
+    player.x += Math.cos(angle) * dashDistance;
+    player.y += Math.sin(angle) * dashDistance;
+    playSound('SFXkachow.mp3');
+};
+
+export function playerMoveSet(player) {
+    if (!interacted) return;
+    if (keysPressed.KeyW && player.vy >= -100) {player.vy -= 10}
+    if (keysPressed.KeyS && player.vy <= 100) {player.vy += 10}
+    if (!keysPressed.KeyW && !keysPressed.KeyS) {player.vy *= 0.85}
+    if (keysPressed.KeyA && player.vx >= -100) {player.vx -= 10}
+    if (keysPressed.KeyD && player.vx <= 100) {player.vx += 10}
+    if (!keysPressed.KeyA && !keysPressed.KeyD) {player.vx *= 0.85}
+    
+    if (keysPressed.Space && player.fireCooldown <= 0) {
+        shootBullet(player);
+        player.fireCooldown = 10;
+    };
+    
+    if (keysPressed.KeyC && player.ultimateCooldown <= 0) {
+        shootUltimate(player);
+        player.ultimateCooldown = 50;
+    };
+    
+    if (keysPressed.ShiftLeft && player.dashCooldown <= 0) {
+        doDash(player);
+        player.dashCooldown = 60;
+    };
+    
+    if (player.fireCooldown > 0) player.fireCooldown--;
+    if (player.ultimateCooldown > 0) player.ultimateCooldown--;
+    if (player.dashCooldown > 0) player.dashCooldown--;
+}
