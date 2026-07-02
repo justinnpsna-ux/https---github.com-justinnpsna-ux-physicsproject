@@ -257,12 +257,12 @@ export class ChargeHitter extends Boss {
     drawBoss() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#cd78cd';
+        ctx.fillStyle = '#c40343';
         ctx.fill();
         ctx.closePath();
     }
 
-    shootBossBullet(boss) { //NOT DONE.
+    shootBossBullet(boss) { 
         if (!isPlayerCreated || !interacted) return;
         let p = player[0];
 

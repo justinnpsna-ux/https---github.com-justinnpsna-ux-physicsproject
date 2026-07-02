@@ -8,7 +8,7 @@ import { Bullet, BadBullet } from './MODbullet.js'
 import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
 
 //rng lol
-import { getRng } from './index.js'
+import { getRng, canvas, ctx } from './index.js'
 
 export class LevelManager {
     constructor() {
@@ -98,24 +98,24 @@ const spawnFunctions = {
 };
 
 export function spawnBall() {
-    let o = new Circle(getRng(175, 325), getRng(35, 125), 15, 0, 0, 0, 0);
+    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 3), getRng(15, 25), 0, 0, 0, 0);
     faller.push(o);
 };
 
 export function spawnSingleShooter() {
-    let o = new SingleShooter(getRng(175, 325), getRng(35, 125), 50, 0, 0, 0, 0, 0);
+    let o = new SingleShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 50, 0, 0, 0, 0, 0);
     o.fireBossCooldown = 100;
     enemies.push(o);
 };
 
 export function spawnSpreadShooter() {
-    let o = new SpreadShooter(getRng(175, 325), getRng(35, 125), 30, 0, 0, 0, 0);
+    let o = new SpreadShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 30, 0, 0, 0, 0);
     o.fireBossCooldown = 200;
     enemies.push(o);
 };
 
 export function spawnChargeHitter() {
-    let o = new ChargeHitter(getRng(175, 325), getRng(35, 125), 60, 0, 0, 0, 0);
+    let o = new ChargeHitter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 60, 0, 0, 0, 0);
     o.fireBossCooldown = 200;
     enemies.push(o);
 };

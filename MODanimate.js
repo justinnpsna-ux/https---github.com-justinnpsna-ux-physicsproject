@@ -69,7 +69,7 @@ export class Animate { //list all functions needed in animate func
         for (let o of bullets) o.checkCollisions(true, false);
         for (let o of badBullets) o.checkCollisions(false, true);
         for (let o of faller) o.checkCollisions();
-        for (let o of enemies) o.checkCollisions(true);
+        for (let o of enemies) o.checkCollisions(o.chargeHitter);
         for (let o of swinger) o.checkCollisions();
     };
 

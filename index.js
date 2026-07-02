@@ -4,6 +4,7 @@ import { SingleShooter, SpreadShooter, ChargeHitter } from './MODboss.js'
 import { Bullet, BadBullet } from './MODbullet.js'
 import { LevelManager } from './MODlevels.js'
 import { Animate } from './MODanimate.js'
+import { GameState } from './MODgameState.js'
 
 import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter } from './MODlevels.js'
 
@@ -11,6 +12,9 @@ export const canvas = document.getElementById('canvas');
 export const ctx = canvas.getContext('2d');
 
 canvas.style.backgroundColor = "#e4e4e4";
+
+//game state manager
+const gameState = new GameState();
 
 //level manager
 const levelManager = new LevelManager();
@@ -133,7 +137,12 @@ function animate() {
     document.getElementById('counter').textContent = destroyedCounter;
 
     //health death system
-    if (player[0].health <= 0 && !immortal) { window.alert("u dided lol....") }
+    if (player[0].health <= 0 && !immortal) { 
+        //window.alert("u dided lol....") 
+        player = [];
+        isPlayerCreated = false;
+        gameState.drawDeathMenu();
+    }
     document.getElementById('playerhealth').textContent = player[0].health;
 
     //to check if there are no enemies to move on levels
