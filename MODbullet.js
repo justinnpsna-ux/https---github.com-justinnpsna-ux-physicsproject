@@ -39,9 +39,9 @@ export class Bullet {
 
     drawBullets() {
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#f5f4a8';
-        ctx.strokeStyle = "#ff5900";
+        ctx.arc(this.x, this.y, this.radius - 0.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffe54f';
+        ctx.strokeStyle = "#e99c18";
         ctx.lineWidth = 2;
         ctx.fill();
         ctx.stroke();
@@ -146,7 +146,7 @@ export class BadBullet extends Bullet {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#ff00c3';
-        ctx.strokeStyle = "#950070";
+        ctx.strokeStyle = "#ff78dd";
         ctx.lineWidth = 2;
         ctx.fill();
         ctx.stroke();
@@ -154,6 +154,126 @@ export class BadBullet extends Bullet {
     }
 
     checkCollisions(exceptPlayer, exceptEnemies) {
+        for (let check of cellChecks) {
+        let targetIndex = this.gridIndex + check;
+
+        // pre checks
+        if (!grid[targetIndex] || grid[targetIndex].length === 0) continue;
+        if (check === 0 && grid[targetIndex].length <= 1) continue;
+
+            for (let o of grid[targetIndex]) {
+                if (this.id <= o.id) continue; //anti double collide
+
+                if (exceptEnemies && !o.isPlayer) continue; //not player, not swinger? check
+                if (exceptEnemies && o.bullet) continue; //bad bullet collide with good bullet ignore
+
+                    let dx = this.x - o.x;
+                    let dy = this.y - o.y;
+                    let distanceSq = (dx * dx) + (dy * dy);
+
+                    if (distanceSq === 0) {// just in case check
+                        this.x += 0.1;
+                        continue;
+                    }
+
+                    let radiusSq = (this.radius + o.radius) * (this.radius + o.radius);
+
+                    if (distanceSq <= radiusSq) {
+                        let distance = Math.sqrt(distanceSq);
+                        let offset = (this.radius + o.radius) - distance;
+                        let directionX = dx / distance; // (-1, 1)
+                        let directionY = dy / distance; // (-1, 1)
+
+                        if (o.ultimate) { //ultimate destroys bad bullet
+                            this.toDelete = true;
+                            continue;
+                        }
+                    
+                        let totalMass = this.mass + o.mass;
+                        let ratioMass = offset / totalMass;
+
+                        this.x += (ratioMass) * (o.mass) * directionX;
+                        this.y += (ratioMass) * (o.mass) * directionY;
+                        o.x -= (ratioMass) * (this.mass) * directionX;
+                        o.y -= (ratioMass) * (this.mass) * directionY
+
+                        let relativeVX = this.vx - o.vx;
+                        let relativeVY = this.vy - o.vy;
+                        let velAlongNormal = (relativeVX * directionX) + (relativeVY * directionY);
+
+                        // change to dot product
+                        if (velAlongNormal < 0) {
+                            let restitution = 0.8;
+                            let impulse = -(1 + restitution) * velAlongNormal / ((1 / this.mass) +(1 / o.mass));
+
+                            this.vx += (impulse / this.mass) * directionX;
+                            this.vy += (impulse / this.mass) * directionY;
+                            o.vx -= (impulse / o.mass) * directionX;
+                            o.vy -= (impulse / o.mass) * directionY;
+
+                            this.toDelete = true;
+                            o.damaged = true;
+                        }
+                    }
+
+                        
+            }
+        }
+    }
+}
+
+export class BadLaser extends Bullet {
+    constructor(x, y, mass) {
+        super(x, y, mass);
+        this.badLaser = true;
+        this.toDelete = false;
+
+        this.warningLaser = true; 
+
+    } 
+
+    drawWarningLaser() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle)
+        ctx.rect(25, -25, 1000, 50);
+        ctx.fillStyle = '#ff000031';
+        ctx.strokeStyle = "#ff000083";
+        ctx.lineWidth = 0;
+        ctx.fill();
+        ctx.restore();
+        
+    }
+
+    drawBadLaser() {
+        ctx.save();
+        if (this.warningLaser) {
+            ctx.beginPath();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle)
+            ctx.rect(25, -25, 1000, 50);
+            ctx.fillStyle = '#ff000031';
+            ctx.strokeStyle = "#ff000083";
+            ctx.lineWidth = 0;
+            ctx.fill();
+        } else {
+            ctx.beginPath();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(this.angle);
+            ctx.rect(25, -25, 1000, 50)
+            ctx.fillStyle = '#ffbb3c60';
+            ctx.strokeStyle = "#ff00000b";
+            ctx.lineWidth = 50;
+            ctx.fill();
+            ctx.stroke();
+        }
+        ctx.restore();
+    }
+
+    checkCollisions(exceptPlayer, exceptEnemies) {
+        if (this.badLaser || this.bullet) return; 
+        
         for (let check of cellChecks) {
         let targetIndex = this.gridIndex + check;
 

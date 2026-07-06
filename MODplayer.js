@@ -65,12 +65,17 @@ export class Player {
         ctx.closePath();
     }
 
-    drawDirection() { //working on a noticable gun direction for further precision.
+    drawDirection() {
+        ctx.save();
         ctx.beginPath();
-        ctx.rect() //x, y, width, height
-        ctx.fillStyle = '#f4c5c5';
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle)
+        ctx.rect(5, -5, 25, 10);
+        ctx.fillStyle = '#b5b5b5';
+        ctx.strokeStyle = "#dbdbdb";
+        ctx.lineWidth = 0;
         ctx.fill();
-        ctx.closePath();
+        ctx.restore();
     }
 
     checkBorders() {
@@ -90,6 +95,16 @@ export class Player {
             this.vx *= -restitution
             this.x += -this.x + this.radius 
         }
+    }
+
+    getAngle() {
+        let angle = Math.atan2(this.vy, this.vx);
+
+        if (this.vx === 0 && this.vy === 0) {
+            angle = 0; 
+        }
+
+        this.angle = angle;
     }
 
     getGridIndex() {

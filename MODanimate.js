@@ -28,6 +28,8 @@ export class Animate { //list all functions needed in animate func
             playerMoveSet(i);
             i.update(0.1);
             i.checkBorders();
+            i.getAngle();
+            i.drawDirection();
         
             if (i.damaged && i.cooldown < 3) {
                 if (i.damageCooldown <= 0) {
@@ -96,7 +98,8 @@ export class Animate { //list all functions needed in animate func
                 b.fireBossCooldown = 50;
             };
             if (b.fireBossCooldown > 0) b.fireBossCooldown--;
-        
+            b.getAngle(b);
+            b.drawDirection();
             b.checkBorders();
 
             if (b.damaged && b.cooldown < 3) {
@@ -118,7 +121,7 @@ export class Animate { //list all functions needed in animate func
                 b.fireBossCooldown = 500;
             };
             if (b.fireBossCooldown > 0) b.fireBossCooldown--;
-            
+            b.drawDirection();
             b.checkBorders();
 
             if (b.damaged && b.cooldown < 3) {
@@ -145,7 +148,32 @@ export class Animate { //list all functions needed in animate func
                 b.vy /= 1.015;
                 b.fireBossCooldown--;
             };
-            
+            b.getAngle(b);
+            b.drawDirection();
+            b.checkBorders();
+
+            if (b.damaged && b.cooldown < 3) {
+                b.cooldown++;
+                b.drawDamage();
+            } else {
+                b.damaged = false;
+                b.drawBoss()
+                b.cooldown = 0;
+            };
+        };
+    };
+
+    drawLaserShooter() {
+        for (let b of enemies) {
+            if (!b.laserShooter) continue;
+            if (b.fireBossCooldown <= 0) {
+                b.fireBossCooldown = 300; //switched orders>
+                b.shootBossBullet(b, false);
+            } else {
+                b.fireBossCooldown--;
+            }
+            b.getAngle(b);
+            b.drawDirection();
             b.checkBorders();
 
             if (b.damaged && b.cooldown < 3) {
@@ -166,8 +194,12 @@ export class Animate { //list all functions needed in animate func
         };
 
         for (let b of badBullets) {
-            b.checkBorders(); 
-            b.drawBadBullets();
+            if (b.badLaser) {
+                b.drawBadLaser();
+            } else {
+                b.checkBorders(); 
+                b.drawBadBullets();
+            }
         };
     };
 

@@ -10,8 +10,9 @@ import { player, faller, enemies, bullets, badBullets, swinger } from './index.j
 import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
 
 //bad bullets
-import { BadBullet, Bullet } from './MODbullet.js'
+import { BadBullet, BadLaser, Bullet } from './MODbullet.js'
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 class Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
@@ -54,6 +55,37 @@ class Boss {
         ctx.fillStyle = '#e04b4b';
         ctx.fill();
         ctx.closePath();
+    }
+
+    drawDirection() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle)
+        ctx.rect(15, -15, 50, 30);
+        ctx.fillStyle = '#717171';
+        ctx.strokeStyle = "#5a5656";
+        ctx.lineWidth = 0;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    getAngle(boss) {
+        if (!isPlayerCreated || !interacted) return;
+        let p = player[0];
+
+        let speed = 40;
+
+        let dx = p.x - boss.x;
+        let dy = p.y - boss.y;
+
+        let angle = Math.atan2(dy, dx);
+
+        if (dx === 0 && dy === 0) {
+            angle = 0;
+        }
+        
+        this.angle = angle;
     }
 
     checkBorders() {
@@ -196,7 +228,7 @@ export class SingleShooter extends Boss {
         playSound('SFXheehaw.mp3');
     };
 
-}
+};
 
 export class SpreadShooter extends Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
@@ -211,6 +243,23 @@ export class SpreadShooter extends Boss {
         ctx.fillStyle = '#c446a8';
         ctx.fill();
         ctx.closePath();
+    }
+
+    drawDirection() {
+        let angle = 0;
+        while(angle < 7) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.translate(this.x, this.y);
+            ctx.rotate(angle)
+            ctx.rect(7.5, -7.5, 25, 15);
+            ctx.fillStyle = '#8aa7b5';
+            ctx.strokeStyle = "#9abed6";
+            ctx.lineWidth = 0;
+            ctx.fill();
+            ctx.restore();
+            angle += Math.PI / 4
+        }
     }
 
     shootBossBullet(boss, big) {
@@ -241,7 +290,7 @@ export class SpreadShooter extends Boss {
         bulletNumber = 0;
     };
 
-}
+};
 
 export class ChargeHitter extends Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
@@ -260,6 +309,19 @@ export class ChargeHitter extends Boss {
         ctx.fillStyle = '#c40343';
         ctx.fill();
         ctx.closePath();
+    }
+
+    drawDirection() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle)
+        ctx.rect(43, -43, 12, 86);
+        ctx.fillStyle = '#000000';
+        ctx.strokeStyle = "#000000";
+        ctx.lineWidth = 0;
+        ctx.fill();
+        ctx.restore();
     }
 
     shootBossBullet(boss) { 
@@ -286,6 +348,92 @@ export class ChargeHitter extends Boss {
         boss.vy = bvy;
         
         playSound('SFXjoyCharge.mp3');
+    }
+}
+
+export class LaserShooter extends Boss {
+    constructor(x, y, radius, vx, vy, ax, ay, mass) {
+        super(x, y, radius, vx, vy, ax, ay, mass);
+        this.laserShooter = true;
+        this.angle = 0;
+
+    } 
+
+    drawBoss() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#c44678';
+        ctx.fill();
+        ctx.closePath();
+    }
+
+    drawDirection() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle)
+        ctx.rect(43, -43, 30, 86);
+        ctx.fillStyle = '#59979c';
+        ctx.strokeStyle = "#5a6e9b";
+        ctx.lineWidth = 0;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    async shootBossBullet(boss, big) {
+        if (!isPlayerCreated || !interacted) return; 
+  
+        let p = player[0]; 
+        let knockback = 10; 
+        let dx = p.x - boss.x; 
+        let dy = p.y - boss.y; 
+        let angle = Math.atan2(dy, dx); 
+
+        let laserTimer = 0;
+  
+        if (dx === 0 && dy === 0) { angle = 0; } 
+
+  // 2. Create the laser and turn ON the warning
+        let o = new BadLaser(boss.x, boss.y, 500); 
+        o.angle = angle; 
+        o.bullet = true; 
+        o.warningLaser = false; 
+
+        badBullets.push(o); 
+        boss.fireBossCooldown = 0; 
+
+        while (laserTimer < 3) {
+            ctx.save()
+            await delay(1000); 
+            laserTimer++
+            ctx.restore()
+
+            let index = badBullets.indexOf(o);
+            if (index !== -1) {
+                badBullets[index].warningLaser = true;
+            }
+            console.log(badBullets[0])
+            //console.log(laserTimer)
+        }
+        console.log(badBullets[0])
+        let index = badBullets.indexOf(o);
+        if (index !== -1) {
+            badBullets[index].warningLaser = false;
+        }
+
+
+        if (!o.warningLaser) {
+            let bvx = Math.cos(angle) * knockback; 
+            let bvy = Math.sin(angle) * knockback; 
+            this.vx -= bvx; 
+            this.vy -= bvy; 
+        }
+        
+        laserTimer = 0;
+        //badBullets.push(o); 
+    
+        //boss.fireBossCooldown = 0; 
+     
     }
 }
 

@@ -1,7 +1,7 @@
 //module for levels
 import { Player, playerMoveSet } from './MODplayer.js'
 import { Circle } from './MODcircle.js'
-import { SingleShooter, SpreadShooter, ChargeHitter } from './MODboss.js'
+import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODboss.js'
 import { Bullet, BadBullet } from './MODbullet.js'
 
 //arrays
@@ -47,7 +47,7 @@ export class LevelManager {
                 spawnBall: 5,
                 spawnSingleShooter: 3,
                 spawnSpreadShooter: 2,
-                spawnChargeHitter: 1
+                spawnChargeHitter: 3
             }
 
         ]
@@ -98,7 +98,7 @@ const spawnFunctions = {
 };
 
 export function spawnBall() {
-    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 3), getRng(15, 25), 0, 0, 0, 0);
+    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 3), getRng(15, 25), getRng(-5, 5), getRng(-5, 5), 0, 0);
     faller.push(o);
 };
 
@@ -117,5 +117,11 @@ export function spawnSpreadShooter() {
 export function spawnChargeHitter() {
     let o = new ChargeHitter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 60, 0, 0, 0, 0);
     o.fireBossCooldown = 200;
+    enemies.push(o);
+};
+
+export function spawnLaserShooter() {
+    let o = new LaserShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 60, 0, 0, 0, 0);
+    o.fireBossCooldown = 100;
     enemies.push(o);
 };

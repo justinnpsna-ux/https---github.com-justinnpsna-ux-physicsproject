@@ -1,12 +1,12 @@
 import { Player, playerMoveSet } from './MODplayer.js'
 import { Circle } from './MODcircle.js'
-import { SingleShooter, SpreadShooter, ChargeHitter } from './MODboss.js'
-import { Bullet, BadBullet } from './MODbullet.js'
+import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODboss.js'
+import { Bullet, BadBullet, BadLaser } from './MODbullet.js'
 import { LevelManager } from './MODlevels.js'
 import { Animate } from './MODanimate.js'
 import { GameState } from './MODgameState.js'
 
-import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter } from './MODlevels.js'
+import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter, spawnLaserShooter } from './MODlevels.js'
 
 export const canvas = document.getElementById('canvas');
 export const ctx = canvas.getContext('2d');
@@ -124,6 +124,8 @@ function animate() {
 
     animateFunc.drawChargeHitter();
 
+    animateFunc.drawLaserShooter();
+
     animateFunc.drawBullets();
 
     animateFunc.drawSwinger();
@@ -158,8 +160,7 @@ freeFall.onclick = () => {
 };
 
 test.onclick = () => {
-    let o = new Circle(getRng(200, canvas.width), getRng(150, 350), 15, 0, 0, 0, 0);
-    faller.push(o);
+    spawnLaserShooter();
 };
 
 pendulum.onclick = () => {

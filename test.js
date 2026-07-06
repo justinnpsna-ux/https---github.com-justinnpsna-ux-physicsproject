@@ -18,4 +18,21 @@ for (let obj of arr) {
 }
 }
 
-myFunc()
+//myFunc()
+
+function burstShot() {
+    let i = 0
+    while (i < 2) {
+    let timer = 0;
+    while (timer < 3) {
+        console.log(timer)
+        timer++
+    }
+    console.log(timer)
+    timer++
+    i++
+}
+timer = 0;
+}
+
+burstShot()
