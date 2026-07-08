@@ -70,7 +70,7 @@ export class Player {
         ctx.beginPath();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle)
-        ctx.rect(5, -5, 25, 10);
+        ctx.rect(5, -5, 20, 10);
         ctx.fillStyle = '#b5b5b5';
         ctx.strokeStyle = "#dbdbdb";
         ctx.lineWidth = 0;

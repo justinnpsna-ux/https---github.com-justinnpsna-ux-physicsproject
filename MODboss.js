@@ -194,7 +194,10 @@ export class SingleShooter extends Boss {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#680853';
+        ctx.strokeStyle = "#e3352f";
+        ctx.lineWidth = 2;
         ctx.fill();
+        ctx.stroke();
         ctx.closePath();
     }
 
@@ -241,7 +244,10 @@ export class SpreadShooter extends Boss {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#c446a8';
+        ctx.strokeStyle = "#ffc96c";
+        ctx.lineWidth = 2;
         ctx.fill();
+        ctx.stroke();
         ctx.closePath();
     }
 
@@ -307,7 +313,10 @@ export class ChargeHitter extends Boss {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fillStyle = '#c40343';
+        ctx.strokeStyle = "#95fff8";
+        ctx.lineWidth = 2;
         ctx.fill();
+        ctx.stroke();
         ctx.closePath();
     }
 

@@ -42,14 +42,14 @@ export class GameState {
         ctx.font = "bold 48px Arial";
         ctx.fillStyle = "#ffffff";
         ctx.textAlign = "center";
-        ctx.fillText("u dided lol!", canvas.width / 2, 150);
+        ctx.fillText("u dided", canvas.width / 2, 150);
 
         ctx.fillStyle = "#7d858a";
         ctx.fillRect(canvas.width / 2 - 100, 250, 200, 50);
 
         ctx.font = "24px Arial";
         ctx.fillStyle = "#ffffff";
-        ctx.fillText("main menu... (refresh to restart)", canvas.width / 2, 282);
+        ctx.fillText("refresh to restart", canvas.width / 2, 282);
     }
 
     resetGame() {
