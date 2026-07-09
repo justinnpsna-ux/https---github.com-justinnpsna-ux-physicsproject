@@ -14,6 +14,8 @@ import { BadBullet, BadLaser, Bullet } from './MODbullet.js'
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+//let laserTimer = 0;
+
 class Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
         //default
@@ -364,6 +366,7 @@ export class LaserShooter extends Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
         super(x, y, radius, vx, vy, ax, ay, mass);
         this.laserShooter = true;
+        this.laserTimer = 0;
         this.angle = 0;
 
     } 
@@ -393,52 +396,50 @@ export class LaserShooter extends Boss {
         if (!isPlayerCreated || !interacted) return; 
   
         let p = player[0]; 
-        let knockback = 10; 
+        let knockback = 1; 
         let dx = p.x - boss.x; 
         let dy = p.y - boss.y; 
         let angle = Math.atan2(dy, dx); 
-
-        let laserTimer = 0;
   
         if (dx === 0 && dy === 0) { angle = 0; } 
 
   // 2. Create the laser and turn ON the warning
-        let o = new BadLaser(boss.x, boss.y, 500); 
+        let o = new BadLaser(boss.x, boss.y); 
         o.angle = angle; 
         o.bullet = true; 
-        o.warningLaser = false; 
 
+        if (this.laserTimer < 475) {
+            o.warningLaser = true; 
+        } else if (this.laserTimer < 500 || this.laserTimer > 525) {
+            o.warningLaser = null;
+        } else {
+            o.warningLaser = false;
+        }
+        
+        console.log(o.warningLaser)
         badBullets.push(o); 
         boss.fireBossCooldown = 0; 
 
-        while (laserTimer < 3) {
-            ctx.save()
-            await delay(1000); 
-            laserTimer++
-            ctx.restore()
-
-            let index = badBullets.indexOf(o);
-            if (index !== -1) {
-                badBullets[index].warningLaser = true;
-            }
-            console.log(badBullets[0])
-            //console.log(laserTimer)
-        }
         console.log(badBullets[0])
-        let index = badBullets.indexOf(o);
-        if (index !== -1) {
-            badBullets[index].warningLaser = false;
-        }
 
-
-        if (!o.warningLaser) {
+        if (o.warningLaser === false) {
             let bvx = Math.cos(angle) * knockback; 
             let bvy = Math.sin(angle) * knockback; 
             this.vx -= bvx; 
             this.vy -= bvy; 
         }
+
+        this.vx /= 1.1; 
+        this.vy /= 1.1; 
+
+
+        ctx.save()
+        await delay(1000); 
+        this.laserTimer++
+        ctx.restore()
+
         
-        laserTimer = 0;
+        if (this.laserTimer > 550) this.laserTimer = 0; //50 is 1 second
         //badBullets.push(o); 
     
         //boss.fireBossCooldown = 0; 

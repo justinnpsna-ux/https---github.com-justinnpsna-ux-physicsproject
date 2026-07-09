@@ -238,8 +238,8 @@ export class BadLaser extends Bullet {
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle)
         ctx.rect(25, -25, 1000, 50);
-        ctx.fillStyle = '#ff000031';
-        ctx.strokeStyle = "#ff000083";
+        ctx.fillStyle = '#ff00000f';
+        ctx.strokeStyle = "#ff000010";
         ctx.lineWidth = 0;
         ctx.fill();
         ctx.restore();
@@ -248,21 +248,24 @@ export class BadLaser extends Bullet {
 
     drawBadLaser() {
         ctx.save();
-        if (this.warningLaser) {
+        if (this.warningLaser === true) {
             ctx.beginPath();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle)
-            ctx.rect(25, -25, 1000, 50);
-            ctx.fillStyle = '#ff000031';
-            ctx.strokeStyle = "#ff000083";
+            ctx.rect(0, -25, 1000, 50);
+            ctx.fillStyle = '#ff00001b';
+            ctx.strokeStyle = "#ff000023";
             ctx.lineWidth = 0;
             ctx.fill();
-        } else {
+            console.log(this.x - 25)
+        } else if (this.warningLaser === null) {
+            return;
+        } else if (this.warningLaser === false) {
             ctx.beginPath();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
             ctx.rect(25, -25, 1000, 50)
-            ctx.fillStyle = '#ffbb3c60';
+            ctx.fillStyle = '#ffbb3c55';
             ctx.strokeStyle = "#ff00000b";
             ctx.lineWidth = 50;
             ctx.fill();
@@ -272,7 +275,7 @@ export class BadLaser extends Bullet {
     }
 
     checkCollisions(exceptPlayer, exceptEnemies) {
-        if (this.badLaser || this.bullet) return; 
+        if (this.warningLaser === true || this.warningLaser === null) return;
         
         for (let check of cellChecks) {
         let targetIndex = this.gridIndex + check;
@@ -287,56 +290,7 @@ export class BadLaser extends Bullet {
                 if (exceptEnemies && !o.isPlayer) continue; //not player, not swinger? check
                 if (exceptEnemies && o.bullet) continue; //bad bullet collide with good bullet ignore
 
-                    let dx = this.x - o.x;
-                    let dy = this.y - o.y;
-                    let distanceSq = (dx * dx) + (dy * dy);
-
-                    if (distanceSq === 0) {// just in case check
-                        this.x += 0.1;
-                        continue;
-                    }
-
-                    let radiusSq = (this.radius + o.radius) * (this.radius + o.radius);
-
-                    if (distanceSq <= radiusSq) {
-                        let distance = Math.sqrt(distanceSq);
-                        let offset = (this.radius + o.radius) - distance;
-                        let directionX = dx / distance; // (-1, 1)
-                        let directionY = dy / distance; // (-1, 1)
-
-                        if (o.ultimate) { //ultimate destroys bad bullet
-                            this.toDelete = true;
-                            continue;
-                        }
-                    
-                        let totalMass = this.mass + o.mass;
-                        let ratioMass = offset / totalMass;
-
-                        this.x += (ratioMass) * (o.mass) * directionX;
-                        this.y += (ratioMass) * (o.mass) * directionY;
-                        o.x -= (ratioMass) * (this.mass) * directionX;
-                        o.y -= (ratioMass) * (this.mass) * directionY
-
-                        let relativeVX = this.vx - o.vx;
-                        let relativeVY = this.vy - o.vy;
-                        let velAlongNormal = (relativeVX * directionX) + (relativeVY * directionY);
-
-                        // change to dot product
-                        if (velAlongNormal < 0) {
-                            let restitution = 0.8;
-                            let impulse = -(1 + restitution) * velAlongNormal / ((1 / this.mass) +(1 / o.mass));
-
-                            this.vx += (impulse / this.mass) * directionX;
-                            this.vy += (impulse / this.mass) * directionY;
-                            o.vx -= (impulse / o.mass) * directionX;
-                            o.vy -= (impulse / o.mass) * directionY;
-
-                            this.toDelete = true;
-                            o.damaged = true;
-                        }
-                    }
-
-                        
+                //this.x * Math.cos(this.angle)
             }
         }
     }
