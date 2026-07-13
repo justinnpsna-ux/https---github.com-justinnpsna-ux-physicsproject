@@ -368,14 +368,20 @@ export class LaserShooter extends Boss {
         this.laserShooter = true;
         this.laserTimer = 0;
         this.angle = 0;
+        this.oldAngle = 0;
+        this.radius = 80;
+        this.health = 20;
 
     } 
 
     drawBoss() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#c44678';
+        ctx.fillStyle = '#84155d';
+        ctx.strokeStyle = "#ff09ef";
+        ctx.lineWidth = 2;
         ctx.fill();
+        ctx.stroke();
         ctx.closePath();
     }
 
@@ -383,12 +389,20 @@ export class LaserShooter extends Boss {
         ctx.save();
         ctx.beginPath();
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.angle)
-        ctx.rect(43, -43, 30, 86);
-        ctx.fillStyle = '#59979c';
-        ctx.strokeStyle = "#5a6e9b";
-        ctx.lineWidth = 0;
+        //ctx.rotate(this.angle)
+        if (this.laserTimer < 450) {
+            ctx.rotate(this.angle)
+        } else if (this.laserTimer < 500 || this.laserTimer > 525) {
+            ctx.rotate(this.oldAngle)
+        } else {
+            ctx.rotate(this.oldAngle)
+        }
+        ctx.rect(0, -75, 100, 150);
+        ctx.fillStyle = '#620b6c';
+        ctx.strokeStyle = "#a806c5";
+        ctx.lineWidth = 2;
         ctx.fill();
+        ctx.stroke();
         ctx.restore();
     }
 
@@ -405,32 +419,36 @@ export class LaserShooter extends Boss {
 
   // 2. Create the laser and turn ON the warning
         let o = new BadLaser(boss.x, boss.y); 
-        o.angle = angle; 
         o.bullet = true; 
 
-        if (this.laserTimer < 475) {
+        if (this.laserTimer < 450) {
             o.warningLaser = true; 
+            o.angle = angle;
+            this.oldAngle = angle;
+
         } else if (this.laserTimer < 500 || this.laserTimer > 525) {
             o.warningLaser = null;
+            this.angle = this.oldAngle
+            o.angle = this.oldAngle
+            
         } else {
             o.warningLaser = false;
+            o.angle = this.oldAngle;
+
         }
         
-        console.log(o.warningLaser)
         badBullets.push(o); 
         boss.fireBossCooldown = 0; 
 
-        console.log(badBullets[0])
-
         if (o.warningLaser === false) {
-            let bvx = Math.cos(angle) * knockback; 
-            let bvy = Math.sin(angle) * knockback; 
+            let bvx = Math.cos(this.oldAngle) * knockback; 
+            let bvy = Math.sin(this.oldAngle) * knockback; 
             this.vx -= bvx; 
             this.vy -= bvy; 
         }
 
-        this.vx /= 1.1; 
-        this.vy /= 1.1; 
+        this.vx /= 1.05; 
+        this.vy /= 1.05; 
 
 
         ctx.save()
@@ -439,7 +457,7 @@ export class LaserShooter extends Boss {
         ctx.restore()
 
         
-        if (this.laserTimer > 550) this.laserTimer = 0; //50 is 1 second
+        if (this.laserTimer > 600) this.laserTimer = 0; //50 is 1 second
         //badBullets.push(o); 
     
         //boss.fireBossCooldown = 0; 

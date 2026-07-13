@@ -58,6 +58,10 @@ export class GameState {
     
 };
 
+function screenShake(multiplier) { //new feature
+
+}
+
 /*
 canvas.addEventListener('click', (event) => {
     if (gameState !== "MENU") return;

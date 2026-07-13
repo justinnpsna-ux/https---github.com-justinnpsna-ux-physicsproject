@@ -257,7 +257,6 @@ export class BadLaser extends Bullet {
             ctx.strokeStyle = "#ff000023";
             ctx.lineWidth = 0;
             ctx.fill();
-            console.log(this.x - 25)
         } else if (this.warningLaser === null) {
             return;
         } else if (this.warningLaser === false) {
@@ -265,8 +264,8 @@ export class BadLaser extends Bullet {
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
             ctx.rect(25, -25, 1000, 50)
-            ctx.fillStyle = '#ffbb3c55';
-            ctx.strokeStyle = "#ff00000b";
+            ctx.fillStyle = '#ff299887';
+            ctx.strokeStyle = "#d178fd4d";
             ctx.lineWidth = 50;
             ctx.fill();
             ctx.stroke();
@@ -291,6 +290,21 @@ export class BadLaser extends Bullet {
                 if (exceptEnemies && o.bullet) continue; //bad bullet collide with good bullet ignore
 
                 //this.x * Math.cos(this.angle)
+
+                /*linear formula for 1 unit (top left) of rectangle
+                let ly = this.y
+                let intercept = 25 / Math.cos(angle)
+
+                while loop> until intercept becomes -25 / Math.cos(angle)
+                //let ly = (Math.tan(angle) * lx) + intercept
+                //let lx = (ly - intercept) / Math.tan(angle)
+                if ()
+                ly--
+                intercept--
+                
+                
+                lets always start at top left rectangle and go until ly = this.y +- (25/Math.cos(angle)) [(sqrt(25^2 + 25^2))])
+                */
             }
         }
     }

@@ -75,6 +75,22 @@ export class Animate { //list all functions needed in animate func
         for (let o of swinger) o.checkCollisions();
     };
 
+    drawBullets() {
+        for (let b of bullets) {
+            if (!b.ultimate) {b.checkBorders()}; //only ultimate doesnt care about borders
+            b.drawBullets();
+        };
+
+        for (let b of badBullets) {
+            if (b.badLaser) {
+                b.drawBadLaser();
+            } else {
+                b.checkBorders(); 
+                b.drawBadBullets();
+            }
+        };
+    };
+
     drawFaller() {
         for (let o of faller) {
             o.checkBorders();
@@ -184,22 +200,6 @@ export class Animate { //list all functions needed in animate func
                 b.drawBoss()
                 b.cooldown = 0;
             };
-        };
-    };
-
-    drawBullets() {
-        for (let b of bullets) {
-            if (!b.ultimate) {b.checkBorders()}; //only ultimate doesnt care about borders
-            b.drawBullets();
-        };
-
-        for (let b of badBullets) {
-            if (b.badLaser) {
-                b.drawBadLaser();
-            } else {
-                b.checkBorders(); 
-                b.drawBadBullets();
-            }
         };
     };
 
