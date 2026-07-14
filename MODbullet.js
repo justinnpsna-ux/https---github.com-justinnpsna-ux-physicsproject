@@ -252,8 +252,8 @@ export class BadLaser extends Bullet {
             ctx.beginPath();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle)
-            ctx.rect(0, -25, 1000, 50);
-            ctx.fillStyle = '#ff00001b';
+            ctx.rect(100, -25, 1000, 50);
+            ctx.fillStyle = '#ff000014';
             ctx.strokeStyle = "#ff000023";
             ctx.lineWidth = 0;
             ctx.fill();
@@ -263,7 +263,7 @@ export class BadLaser extends Bullet {
             ctx.beginPath();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
-            ctx.rect(25, -25, 1000, 50)
+            ctx.rect(100, -25, 1000, 50)
             ctx.fillStyle = '#ff299887';
             ctx.strokeStyle = "#d178fd4d";
             ctx.lineWidth = 50;

@@ -14,8 +14,6 @@ import { BadBullet, BadLaser, Bullet } from './MODbullet.js'
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-//let laserTimer = 0;
-
 class Boss {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
         //default
@@ -367,8 +365,10 @@ export class LaserShooter extends Boss {
         super(x, y, radius, vx, vy, ax, ay, mass);
         this.laserShooter = true;
         this.laserTimer = 0;
+
         this.angle = 0;
         this.oldAngle = 0;
+
         this.radius = 80;
         this.health = 20;
 
@@ -447,8 +447,8 @@ export class LaserShooter extends Boss {
             this.vy -= bvy; 
         }
 
-        this.vx /= 1.05; 
-        this.vy /= 1.05; 
+        this.vx /= 1.02; 
+        this.vy /= 1.02; 
 
 
         ctx.save()
@@ -458,10 +458,6 @@ export class LaserShooter extends Boss {
 
         
         if (this.laserTimer > 600) this.laserTimer = 0; //50 is 1 second
-        //badBullets.push(o); 
-    
-        //boss.fireBossCooldown = 0; 
-     
     }
 }
 

@@ -78,6 +78,18 @@ export class Player {
         ctx.restore();
     }
 
+    drawTrail() {
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.rect(-200, -15, 210, 30)
+        ctx.fillStyle = '#7c7ce6';
+        ctx.lineWidth = 0;
+        ctx.fill();
+        ctx.restore();
+    }
+
     checkBorders() {
         let restitution = 0.8
         if (this.y + this.radius > canvas.height) {
@@ -232,6 +244,7 @@ function doDash(player) {
     };
     player.x += Math.cos(angle) * dashDistance;
     player.y += Math.sin(angle) * dashDistance;
+    player.drawTrail();
     playSound('SFXkachow.mp3');
 };
 
