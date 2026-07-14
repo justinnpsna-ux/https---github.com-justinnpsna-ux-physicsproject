@@ -377,8 +377,8 @@ export class LaserShooter extends Boss {
     drawBoss() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#84155d';
-        ctx.strokeStyle = "#ff09ef";
+        ctx.fillStyle = '#680785';
+        ctx.strokeStyle = "#ff04c4";
         ctx.lineWidth = 2;
         ctx.fill();
         ctx.stroke();
@@ -398,7 +398,7 @@ export class LaserShooter extends Boss {
             ctx.rotate(this.oldAngle)
         }
         ctx.rect(0, -75, 100, 150);
-        ctx.fillStyle = '#620b6c';
+        ctx.fillStyle = '#46084d';
         ctx.strokeStyle = "#a806c5";
         ctx.lineWidth = 2;
         ctx.fill();
@@ -415,9 +415,8 @@ export class LaserShooter extends Boss {
         let dy = p.y - boss.y; 
         let angle = Math.atan2(dy, dx); 
   
-        if (dx === 0 && dy === 0) { angle = 0; } 
+        if (dx === 0 && dy === 0) { angle = 0 }; 
 
-  // 2. Create the laser and turn ON the warning
         let o = new BadLaser(boss.x, boss.y); 
         o.bullet = true; 
 
@@ -426,14 +425,17 @@ export class LaserShooter extends Boss {
             o.angle = angle;
             this.oldAngle = angle;
 
+            if (this.laserTimer === 1) playSound("SFXmamaHaha.mp3");
+
         } else if (this.laserTimer < 500 || this.laserTimer > 525) {
             o.warningLaser = null;
-            this.angle = this.oldAngle
-            o.angle = this.oldAngle
+            this.angle = this.oldAngle;
+            o.angle = this.oldAngle;
+            if (this.laserTimer === 490) playSound("SFXmamaBoomShort.mp3");
             
         } else {
             o.warningLaser = false;
-            o.angle = this.oldAngle;
+            o.angle = this.oldAngle;            
 
         }
         
@@ -451,11 +453,10 @@ export class LaserShooter extends Boss {
         this.vy /= 1.02; 
 
 
-        ctx.save()
+        ctx.save();
         await delay(1000); 
-        this.laserTimer++
-        ctx.restore()
-
+        this.laserTimer++;
+        ctx.restore();
         
         if (this.laserTimer > 600) this.laserTimer = 0; //50 is 1 second
     }

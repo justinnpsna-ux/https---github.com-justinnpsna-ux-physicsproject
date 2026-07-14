@@ -48,6 +48,14 @@ export class LevelManager {
                 spawnSingleShooter: 3,
                 spawnSpreadShooter: 2,
                 spawnChargeHitter: 3
+            },
+            {
+                name: "Level 7: is that darth vader",
+                spawnBall: 20,
+                spawnSingleShooter: 1,
+                spawnSpreadShooter: 2,
+                spawnChargeHitter: 1,
+                spawnLaserShooter: 1
             }
 
         ]
@@ -94,7 +102,8 @@ const spawnFunctions = {
     spawnBall: spawnBall,                 
     spawnSingleShooter: spawnSingleShooter,
     spawnSpreadShooter: spawnSpreadShooter,
-    spawnChargeHitter: spawnChargeHitter
+    spawnChargeHitter: spawnChargeHitter,
+    spawnLaserShooter: spawnLaserShooter
 };
 
 export function spawnBall() {

@@ -83,7 +83,7 @@ export class Player {
         ctx.beginPath();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.rect(-200, -15, 210, 30)
+        ctx.rect(-200, -14, 210, 28)
         ctx.fillStyle = '#7c7ce6';
         ctx.lineWidth = 0;
         ctx.fill();
