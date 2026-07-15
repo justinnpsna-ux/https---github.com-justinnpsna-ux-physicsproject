@@ -418,20 +418,17 @@ export class LaserShooter extends Boss {
         if (dx === 0 && dy === 0) { angle = 0 }; 
 
         let o = new BadLaser(boss.x, boss.y); 
-        o.bullet = true; 
+        //o.badBullet = true; 
 
         if (this.laserTimer < 450) {
             o.warningLaser = true; 
             o.angle = angle;
             this.oldAngle = angle;
 
-            if (this.laserTimer === 1) playSound("SFXmamaHaha.mp3");
-
         } else if (this.laserTimer < 500 || this.laserTimer > 525) {
             o.warningLaser = null;
             this.angle = this.oldAngle;
             o.angle = this.oldAngle;
-            if (this.laserTimer === 490) playSound("SFXmamaBoomShort.mp3");
             
         } else {
             o.warningLaser = false;
@@ -440,6 +437,8 @@ export class LaserShooter extends Boss {
         }
         
         badBullets.push(o); 
+        o.checkCollisions()
+        //if (!o.warningLaser) console.log(badBullets);
         boss.fireBossCooldown = 0; 
 
         if (o.warningLaser === false) {
@@ -456,6 +455,8 @@ export class LaserShooter extends Boss {
         ctx.save();
         await delay(1000); 
         this.laserTimer++;
+        if (this.laserTimer === 1) playSound("SFXmamaHaha.mp3");
+        if (this.laserTimer === 490) playSound("SFXmamaBoomShort.mp3");
         ctx.restore();
         
         if (this.laserTimer > 600) this.laserTimer = 0; //50 is 1 second

@@ -68,6 +68,7 @@ export class Bullet {
     }
 
     getGridIndex() {
+        if (this.badLaser) return;
         let col = Math.floor(this.x / cellSize);
         let row = Math.floor(this.y / cellSize);
 
@@ -226,6 +227,7 @@ export class BadLaser extends Bullet {
     constructor(x, y, mass) {
         super(x, y, mass);
         this.badLaser = true;
+        //this.badBullet = true;
         this.toDelete = false;
 
         this.warningLaser = true; 
@@ -263,7 +265,7 @@ export class BadLaser extends Bullet {
             ctx.beginPath();
             ctx.translate(this.x, this.y);
             ctx.rotate(this.angle);
-            ctx.rect(100, -25, 1000, 50)
+            ctx.rect(100, -40, 1000, 80)
             ctx.fillStyle = '#ff299887';
             ctx.strokeStyle = "#d178fd4d";
             ctx.lineWidth = 50;
@@ -274,20 +276,31 @@ export class BadLaser extends Bullet {
     }
 
     checkCollisions(exceptPlayer, exceptEnemies) {
+        console.log("HI")
         if (this.warningLaser === true || this.warningLaser === null) return;
-        
-        for (let check of cellChecks) {
-        let targetIndex = this.gridIndex + check;
 
         // pre checks
-        if (!grid[targetIndex] || grid[targetIndex].length === 0) continue;
-        if (check === 0 && grid[targetIndex].length <= 1) continue;
+        //if (this.id <= o.id) return; //anti double collide
 
-            for (let o of grid[targetIndex]) {
-                if (this.id <= o.id) continue; //anti double collide
+        //if (exceptEnemies && !o.isPlayer) return; //not player, not swinger? check
+        //if (exceptEnemies && o.bullet) return; //bad bullet collide with good bullet ignore
 
-                if (exceptEnemies && !o.isPlayer) continue; //not player, not swinger? check
-                if (exceptEnemies && o.bullet) continue; //bad bullet collide with good bullet ignore
+        let p = player[0];
+        let knockback = 50;
+
+        let ox = this.x - (0.5 * Math.sin(this.angle)); //rect middle
+        let oy = this.y + (0.5 * Math.cos(this.angle));
+        let by = Math.tan(this.angle) * (p.x - ox) + oy; //this finds the y value of the laser at x = player.x (not yet centralized)
+   
+        let diff = Math.abs(p.y - by);
+
+        if (diff <= 85) {
+            p.damaged = true
+            p.vx += knockback * Math.cos(this.angle);
+            p.vy += knockback * Math.sin(this.angle);
+        };
+
+
 
                 //this.x * Math.cos(this.angle)
 
@@ -305,7 +318,5 @@ export class BadLaser extends Bullet {
                 
                 lets always start at top left rectangle and go until ly = this.y +- (25/Math.cos(angle)) [(sqrt(25^2 + 25^2))])
                 */
-            }
-        }
     }
 }

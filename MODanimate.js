@@ -69,7 +69,11 @@ export class Animate { //list all functions needed in animate func
     collisionsAll() {
         for (let i of player) i.checkCollisions();
         for (let o of bullets) o.checkCollisions(true, false);
-        for (let o of badBullets) o.checkCollisions(false, true);
+        for (let o of badBullets) {
+            console.log(o)
+            if (o.badLaser) {console.log("bad laser yes")}
+            o.checkCollisions(false, true)
+        };
         for (let o of faller) o.checkCollisions();
         for (let o of enemies) o.checkCollisions(o.chargeHitter);
         for (let o of swinger) o.checkCollisions();

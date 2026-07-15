@@ -51,7 +51,7 @@ export class LevelManager {
             },
             {
                 name: "Level 7: is that darth vader",
-                spawnBall: 20,
+                spawnBall: 30,
                 spawnSingleShooter: 1,
                 spawnSpreadShooter: 2,
                 spawnChargeHitter: 1,
@@ -107,7 +107,7 @@ const spawnFunctions = {
 };
 
 export function spawnBall() {
-    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 3), getRng(15, 25), getRng(-5, 5), getRng(-5, 5), 0, 0);
+    let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 2), getRng(15, 25), getRng(-5, 5), getRng(-5, 5), 0, 0);
     faller.push(o);
 };
 
@@ -130,7 +130,7 @@ export function spawnChargeHitter() {
 };
 
 export function spawnLaserShooter() {
-    let o = new LaserShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 60, 0, 0, 0, 0);
+    let o = new LaserShooter(getRng(0, canvas.width), getRng(0, canvas.height / 4), 60, 0, 0, 0, 0);
     o.fireBossCooldown = 100;
     enemies.push(o);
 };
