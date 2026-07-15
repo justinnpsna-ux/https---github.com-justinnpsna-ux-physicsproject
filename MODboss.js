@@ -437,7 +437,7 @@ export class LaserShooter extends Boss {
         }
         
         badBullets.push(o); 
-        o.checkCollisions()
+        o.checkCollisions() //bad laser coll check doesnt work on MODanimate
         //if (!o.warningLaser) console.log(badBullets);
         boss.fireBossCooldown = 0; 
 

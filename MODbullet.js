@@ -287,7 +287,7 @@ export class BadLaser extends Bullet {
 
         let p = player[0];
         let knockback = 50;
-
+        //recheck math>>>
         let ox = this.x - (0.5 * Math.sin(this.angle)); //rect middle
         let oy = this.y + (0.5 * Math.cos(this.angle));
         let by = Math.tan(this.angle) * (p.x - ox) + oy; //this finds the y value of the laser at x = player.x (not yet centralized)
@@ -299,24 +299,5 @@ export class BadLaser extends Bullet {
             p.vx += knockback * Math.cos(this.angle);
             p.vy += knockback * Math.sin(this.angle);
         };
-
-
-
-                //this.x * Math.cos(this.angle)
-
-                /*linear formula for 1 unit (top left) of rectangle
-                let ly = this.y
-                let intercept = 25 / Math.cos(angle)
-
-                while loop> until intercept becomes -25 / Math.cos(angle)
-                //let ly = (Math.tan(angle) * lx) + intercept
-                //let lx = (ly - intercept) / Math.tan(angle)
-                if ()
-                ly--
-                intercept--
-                
-                
-                lets always start at top left rectangle and go until ly = this.y +- (25/Math.cos(angle)) [(sqrt(25^2 + 25^2))])
-                */
     }
 }

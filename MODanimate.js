@@ -70,7 +70,7 @@ export class Animate { //list all functions needed in animate func
         for (let i of player) i.checkCollisions();
         for (let o of bullets) o.checkCollisions(true, false);
         for (let o of badBullets) {
-            console.log(o)
+            console.log(o) //bad laser doesnt work
             if (o.badLaser) {console.log("bad laser yes")}
             o.checkCollisions(false, true)
         };
