@@ -280,6 +280,36 @@ export class BadLaser extends Bullet {
 
         let p = player[0];
         let knockback = 50;
+        let laserWidth = 50;
+
+        let nSlope = Math.tan(this.angle);
+        let pSlope = -1 / nSlope;
+
+        if (nSlope === 0) nSlope += 0.1; //TODO: learn how to use vectors so no edge cases
+        if (nSlope > 10000) nSlope = 10000;
+        if (nSlope < -10000) nSlope = -10000;
+
+        let bx = ((-this.y + p.y + nSlope * this.x - pSlope * p.x) / (nSlope - pSlope));
+        let by = nSlope * (bx - this.x) + this.y;
+
+        let dx = p.x - bx;
+        let dy = p.y - by;
+
+        let distanceSq = (dx * dx) + (dy * dy)
+
+        if (distanceSq <= (laserWidth * laserWidth)) {
+            p.damaged = true
+            p.vx += knockback * Math.cos(this.angle);
+            p.vy += knockback * Math.sin(this.angle);
+        }
+    }
+
+    checkCollisionsOld(exceptPlayer, exceptEnemies) {
+        //not optimal. but cool to know
+        if (this.warningLaser === true || this.warningLaser === null) return;
+
+        let p = player[0];
+        let knockback = 50;
 
         let ox = this.x //its already centered somehow????? it works tho so i dont mind lol
         let oy = this.y
