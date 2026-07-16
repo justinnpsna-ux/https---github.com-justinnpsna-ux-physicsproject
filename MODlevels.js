@@ -56,7 +56,22 @@ export class LevelManager {
                 spawnSpreadShooter: 2,
                 spawnChargeHitter: 1,
                 spawnLaserShooter: 1
+            },
+            {
+                name: "Level 8: why is everything red",
+                spawnBall: 10,
+                spawnSingleShooter: 2,
+                spawnChargeHitter: 3,
+                spawnLaserShooter: 3
+            },
+            {
+                name: "Level 9: u gotta be kidding me",
+                spawnBall: 20,
+                spawnSpreadShooter: 1,
+                spawnChargeHitter: 5,
+                spawnLaserShooter: 5
             }
+
 
         ]
     }

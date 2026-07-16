@@ -276,25 +276,22 @@ export class BadLaser extends Bullet {
     }
 
     checkCollisions(exceptPlayer, exceptEnemies) {
-        console.log("HI")
         if (this.warningLaser === true || this.warningLaser === null) return;
-
-        // pre checks
-        //if (this.id <= o.id) return; //anti double collide
-
-        //if (exceptEnemies && !o.isPlayer) return; //not player, not swinger? check
-        //if (exceptEnemies && o.bullet) return; //bad bullet collide with good bullet ignore
 
         let p = player[0];
         let knockback = 50;
-        //recheck math>>>
-        let ox = this.x - (0.5 * Math.sin(this.angle)); //rect middle
-        let oy = this.y + (0.5 * Math.cos(this.angle));
-        let by = Math.tan(this.angle) * (p.x - ox) + oy; //this finds the y value of the laser at x = player.x (not yet centralized)
-   
-        let diff = Math.abs(p.y - by);
 
-        if (diff <= 85) {
+        let ox = this.x //its already centered somehow????? it works tho so i dont mind lol
+        let oy = this.y
+        let slope = Math.tan(this.angle);
+
+        let by = slope * (p.x - ox) + oy; //this finds the y value of the laser at x = player.x
+        let diffY = Math.abs(p.y - by);
+
+        let bx = ((p.y - this.y) / slope) + this.x;
+        let diffX = Math.abs(p.x - bx);
+        //maybe use optimization with derivatives to find perpendicular path to laser instead?
+        if (diffY <= 85 || diffX <= 85) {
             p.damaged = true
             p.vx += knockback * Math.cos(this.angle);
             p.vy += knockback * Math.sin(this.angle);
