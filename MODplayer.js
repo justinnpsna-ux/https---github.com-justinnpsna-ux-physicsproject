@@ -15,6 +15,9 @@ import { BadBullet, Bullet } from './MODbullet.js'
 export const playerStatsOriginal = //so we have a copy at all times
 {   health: 10,
     bulletDamage: 1,
+    movementSpeed: 10,
+    dashDistance: 200,
+
     fireCooldown: 20,
     ultimateCooldown: 75,
     dashCooldown: 60
@@ -23,6 +26,9 @@ export const playerStatsOriginal = //so we have a copy at all times
 export const playerStats = //so we can do power ups (maybe use points to buy?)
 {   health: 10,
     bulletDamage: 1,
+    movementSpeed: 10,
+    dashDistance: 200,
+
     fireCooldown: 20,
     ultimateCooldown: 75,
     dashCooldown: 60
@@ -98,7 +104,7 @@ export class Player {
         ctx.beginPath();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.rect(-200, -14, 210, 28)
+        ctx.rect(-playerStats.dashDistance - 10, -14, playerStats.dashDistance + 10, 28)
         ctx.fillStyle = '#7c7ce6';
         ctx.lineWidth = 0;
         ctx.fill();
@@ -250,7 +256,7 @@ function shootUltimate(player) {
 
 function doDash(player) {
     if (!isPlayerCreated || !interacted) return;
-    let dashDistance = 200; 
+    let dashDistance = playerStats.dashDistance; 
 
     let angle = Math.atan2(player.vy, player.vx);
 
@@ -265,11 +271,13 @@ function doDash(player) {
 
 export function playerMoveSet(player) {
     if (!interacted) return;
-    if (keysPressed.KeyW && player.vy >= -100) {player.vy -= 10}
-    if (keysPressed.KeyS && player.vy <= 100) {player.vy += 10}
+    let movementSpeed = playerStats.movementSpeed;
+
+    if (keysPressed.KeyW && player.vy >= -100) {player.vy -= movementSpeed}
+    if (keysPressed.KeyS && player.vy <= 100) {player.vy += movementSpeed}
     if (!keysPressed.KeyW && !keysPressed.KeyS) {player.vy *= 0.85}
-    if (keysPressed.KeyA && player.vx >= -100) {player.vx -= 10}
-    if (keysPressed.KeyD && player.vx <= 100) {player.vx += 10}
+    if (keysPressed.KeyA && player.vx >= -100) {player.vx -= movementSpeed}
+    if (keysPressed.KeyD && player.vx <= 100) {player.vx += movementSpeed}
     if (!keysPressed.KeyA && !keysPressed.KeyD) {player.vx *= 0.85}
     
     if (keysPressed.Space && player.fireCooldown <= 0) {
