@@ -150,13 +150,16 @@ export function spawnLaserShooter() {
     enemies.push(o);
 };
 
+//levels buttons
+
+const levelsPage = document.getElementById('levelsPage');
 const openBtn = document.getElementById('openBtn');
 const closeBtn = document.getElementById('closeBtn');
 
 openBtn.addEventListener('click', () => {
-  levels.classList.remove('hidden');
+  levelsPage.classList.remove('hidden');
 });
 
 closeBtn.addEventListener('click', () => {
-  levels.classList.add('hidden');
+  levelsPage.classList.add('hidden');
 });

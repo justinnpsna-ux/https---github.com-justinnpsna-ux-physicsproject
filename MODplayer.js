@@ -12,6 +12,21 @@ import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
 //bad bullets
 import { BadBullet, Bullet } from './MODbullet.js'
 
+export const playerStatsOriginal = //so we have a copy at all times
+{   health: 10,
+    bulletDamage: 1,
+    fireCooldown: 20,
+    ultimateCooldown: 75,
+    dashCooldown: 60
+};
+
+export const playerStats = //so we can do power ups (maybe use points to buy?)
+{   health: 10,
+    bulletDamage: 1,
+    fireCooldown: 20,
+    ultimateCooldown: 75,
+    dashCooldown: 60
+};
 export class Player {
     constructor(x, y, radius, vx, vy, ax, ay, mass) {
         //default
@@ -24,7 +39,7 @@ export class Player {
         this.ay = ay;
         this.mass = Math.PI * radius * radius;
         this.isPlayer = true;
-        this.health = 10;
+        this.health = playerStats.health;
 
         //technical
         this.gridIndex = 0;
@@ -259,17 +274,17 @@ export function playerMoveSet(player) {
     
     if (keysPressed.Space && player.fireCooldown <= 0) {
         shootBullet(player);
-        player.fireCooldown = 10;
+        player.fireCooldown = playerStats.fireCooldown;
     };
     
     if (keysPressed.KeyC && player.ultimateCooldown <= 0) {
         shootUltimate(player);
-        player.ultimateCooldown = 50;
+        player.ultimateCooldown = playerStats.ultimateCooldown;
     };
     
     if (keysPressed.ShiftLeft && player.dashCooldown <= 0) {
         doDash(player);
-        player.dashCooldown = 60;
+        player.dashCooldown = playerStats.dashCooldown;
     };
     
     if (player.fireCooldown > 0) player.fireCooldown--;

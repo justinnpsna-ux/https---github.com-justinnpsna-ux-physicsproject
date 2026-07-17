@@ -9,6 +9,7 @@ import { player, faller, enemies, bullets, badBullets, swinger } from './index.j
 //sound
 import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
 
+import { playerStats, playerStatsOriginal } from './MODplayer.js'
 export class Bullet {
     constructor(x, y, radius, vx, vy, ax, ay, mass) { //dont think i need id cuz it inherits
         this.x = x;
@@ -121,7 +122,7 @@ export class Bullet {
 
                         this.toDelete = true;
                         o.damaged = true;
-                        o.health--; //for enemies
+                        o.health -= playerStats.bulletDamage; //for enemies
                         
                         let knockback = this.radius > 50 ? 100000 : 15000;
                         o.vx -= (knockback / o.mass) * directionX;
