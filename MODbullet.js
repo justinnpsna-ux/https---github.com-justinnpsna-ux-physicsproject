@@ -227,7 +227,7 @@ export class BadLaser extends Bullet {
     constructor(x, y, mass) {
         super(x, y, mass);
         this.badLaser = true;
-        //this.badBullet = true;
+        this.badBullet = true;
         this.toDelete = false;
 
         this.warningLaser = true; 

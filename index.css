@@ -1,0 +1,63 @@
+/* Base drawer styling (Hidden off-screen to the right by default) */
+.levels {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 25vw;          /* Exactly 25% of viewport width */
+    height: 100vh;        /* Full viewport height */
+    background-color: #ffffff;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out; /* Smooth slide effect */
+    z-index: 1000;        /* Ensures it sits on top of all other content */
+}
+
+/* Inside padding and positioning */
+.levels-content {
+    padding: 20px;
+    position: relative;
+}
+
+#levelsHeader {
+    margin-left: 20;  
+}
+
+/* Close button style */
+#closeBtn {
+    margin-top: -50;  
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    background: none;
+    border: 1px solid black;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#openBtn {
+    
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    background: none;
+    border: 1px solid black;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+#level {
+    margin-right: 3;  
+    margin-top: 5;  
+    width: 25px;
+    font-size: 18px;
+    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* This class hides the drawer by pushing it completely off-screen */
+.levels.hidden {
+    transform: translateX(100%);
+}

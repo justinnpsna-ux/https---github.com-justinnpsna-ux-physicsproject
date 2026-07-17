@@ -418,7 +418,6 @@ export class LaserShooter extends Boss {
         if (dx === 0 && dy === 0) { angle = 0 }; 
 
         let o = new BadLaser(boss.x, boss.y); 
-        //o.badBullet = true; 
 
         if (this.laserTimer < 450) {
             o.warningLaser = true; 

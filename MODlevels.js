@@ -149,3 +149,14 @@ export function spawnLaserShooter() {
     o.fireBossCooldown = 100;
     enemies.push(o);
 };
+
+const openBtn = document.getElementById('openBtn');
+const closeBtn = document.getElementById('closeBtn');
+
+openBtn.addEventListener('click', () => {
+  levels.classList.remove('hidden');
+});
+
+closeBtn.addEventListener('click', () => {
+  levels.classList.add('hidden');
+});

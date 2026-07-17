@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ball Game #2</title>
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
     <canvas id="canvas" width="800" height="600" style="border: 1px solid #000;">
@@ -10,6 +11,23 @@
     <h4 style="margin-top: -2;">time: <span id="timer" type="number"></span></h4>
     <h1 style="margin-top: -20;">health: <span id="playerhealth" type="number"></span><h1>
     <h1 style="margin-top: -20;">points: <span id="counter" type="number"></span><h1></h1>
+
+
+    <button id="openBtn">Open levels</button>
+    <div id="levelsPage" class="levels hidden">
+        <h2 id="levelsHeader">Levels</h2>
+        <div class="levels-content">
+            <button id="level">1</button>
+            <button id="level">2</button>
+            <button id="level">3</button>
+            <button id="level">4</button>
+            <button id="level">5</button>
+            <button id="level">6</button>
+            <button id="level">7</button>
+            <button id="level">8</button>
+            <button id="closeBtn">&times;</button>
+        </div>
+    </div>
 </body>
 
 <button id="freefall">Free Fall</button>

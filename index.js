@@ -113,7 +113,7 @@ function animate() {
     animateFunc.updateAll();
 
     animateFunc.gridIndexAll();
-
+    
     animateFunc.collisionsAll();
 
     animateFunc.drawFaller();
