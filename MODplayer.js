@@ -4,7 +4,7 @@ import { canvas, ctx, nextCircleId, cellSize,
     interacted, keysPressed } from './index.js';
 
 //arrays
-import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
 
 //sound
 import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
@@ -216,7 +216,7 @@ export function createPlayer() { //doesnt work because isPlayerCreated is consta
     if (isPlayerCreated) return;
 
     let o = new Player(250, 250, 15, 0, 0, 0, 0, 0);
-    player.push(o);
+    entities.player.push(o);
 
     isPlayerCreated = true;
 };
@@ -236,7 +236,7 @@ function shootBullet(player) {
     player.y + (player.radius + 5) * Math.sin(angle), 3, bvx, bvy, 0, 0, 0);
     o.mass = 0.1;
 
-    bullets.push(o);
+    entities.bullets.push(o);
     playSound('SFXpew.mp3');
 };
 
@@ -249,7 +249,7 @@ function shootUltimate(player) {
     o.mass = 100;
     o.toDelete = true;
     o.ultimate = true;
-    bullets.push(o);
+    entities.bullets.push(o);
     playSound('SFXboom.mp3');
     playSound('SFXeireen.mp3');
 };

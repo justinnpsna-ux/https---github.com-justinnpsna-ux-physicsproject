@@ -17,7 +17,7 @@ canvas.style.backgroundColor = "#e4e4e4";
 const gameState = new GameState();
 
 //level manager
-const levelManager = new LevelManager();
+export const levelManager = new LevelManager();
 
 //animate functions
 const animateFunc = new Animate();
@@ -77,11 +77,21 @@ let lastTime = 0;
 
 //arrays
 export let faller = [];
-export let enemies = []; //use this instead of the singular arrays. for boss
+export let enemies = []; 
 export let swinger = [];
 export let player = [];
 export let bullets = [];
 export let badBullets = [];
+
+export let entities = { 
+    faller: [],
+    enemies: [], 
+    swinger: [], 
+    player: [],
+
+    bullets : [],
+    badBullets: []
+    };
 
 //keys
 export const keysPressed = {
@@ -131,21 +141,21 @@ function animate() {
     animateFunc.drawSwinger();
 
     //animateFunc.filterBullets();
-    bullets = bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
-    badBullets = badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
+    entities.bullets = entities.bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
+    entities.badBullets = entities.badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
 
     //point system
     handleEnemyDeath();
     document.getElementById('counter').textContent = destroyedCounter;
 
     //health death system
-    if (player[0].health <= 0 && !immortal) { 
+    if (entities.player[0].health <= 0 && !immortal) { 
         //window.alert("u dided lol....") 
-        player = [];
+        entities.player = [];
         isPlayerCreated = false;
         gameState.drawDeathMenu();
     }
-    document.getElementById('playerhealth').textContent = player[0].health;
+    document.getElementById('playerhealth').textContent = entities.player[0].health;
 
     //to check if there are no enemies to move on levels
     levelManager.getSuccess();
@@ -156,7 +166,7 @@ function animate() {
 //buttons
 freeFall.onclick = () => {
     let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height), getRng(10, 30), getRng(-10, 10), getRng(-10, 10), 0, 0);
-    faller.push(o);
+    entities.faller.push(o);
 };
 
 test.onclick = () => {
@@ -165,7 +175,7 @@ test.onclick = () => {
 
 pendulum.onclick = () => {
     let o = new Circle(300, 250, 20, 0, 0, 0, 0, Math.PI/2, 0, 0, 100) //pendulum swing soon
-    swinger.push(o);
+    entities.swinger.push(o);
 };
 
 singleshooterButton.onclick = () => {
@@ -186,8 +196,8 @@ nextLevelButton.onclick = () => {
 };
 
 reset.onclick = () => {
-    faller = [];
-    enemies = [];
+    entities.faller = [];
+    entities.enemies = [];
 };
 
 //mouse pos func and events
@@ -262,7 +272,7 @@ function createPlayer() {
     if (isPlayerCreated) return;
 
     let o = new Player(250, 250, 15, 0, 0, 0, 0, 0);
-    player.push(o);
+    entities.player.push(o);
 
     isPlayerCreated = true;
 };

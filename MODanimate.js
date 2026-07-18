@@ -4,7 +4,7 @@ import { canvas, ctx, nextCircleId, cellSize,
     interacted } from './index.js';
 
 //arrays
-import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
 
 //misc
 import { playerMoveSet } from './MODplayer.js';
@@ -24,7 +24,7 @@ export class Animate { //list all functions needed in animate func
     };
 
     updatePlayer() {
-        for (let i of player) {
+        for (let i of entities.player) {
             playerMoveSet(i);
             i.update(0.1);
             i.checkBorders();
@@ -50,38 +50,38 @@ export class Animate { //list all functions needed in animate func
     }
 
     updateAll() {
-        for (let o of bullets) o.update(0.1);
-        for (let o of badBullets) o.update(0.1);
-        for (let o of faller) o.update(0.1);
-        for (let o of enemies) o.update(0.1);
-        for (let o of swinger) { o.applyTorque(-0.098 * Math.sin(o.theta)); o.swing(0.1); }
+        for (let o of entities.bullets) o.update(0.1);
+        for (let o of entities.badBullets) o.update(0.1);
+        for (let o of entities.faller) o.update(0.1);
+        for (let o of entities.enemies) o.update(0.1);
+        for (let o of entities.swinger) { o.applyTorque(-0.098 * Math.sin(o.theta)); o.swing(0.1); }
     }
     
     gridIndexAll() {
-        for (let i of player) i.getGridIndex();
-        for (let o of faller) o.getGridIndex();
-        for (let o of enemies) o.getGridIndex();
-        for (let o of swinger) o.getGridIndex();
-        for (let o of bullets) o.getGridIndex();
-        for (let o of badBullets) o.getGridIndex();
+        for (let i of entities.player) i.getGridIndex();
+        for (let o of entities.faller) o.getGridIndex();
+        for (let o of entities.enemies) o.getGridIndex();
+        for (let o of entities.swinger) o.getGridIndex();
+        for (let o of entities.bullets) o.getGridIndex();
+        for (let o of entities.badBullets) o.getGridIndex();
     }
 
     collisionsAll() {
-        for (let i of player) i.checkCollisions();
-        for (let o of bullets) o.checkCollisions(true, false);
-        for (let o of badBullets) o.checkCollisions(false, true)
-        for (let o of faller) o.checkCollisions();
-        for (let o of enemies) o.checkCollisions(o.chargeHitter);
-        for (let o of swinger) o.checkCollisions();
+        for (let i of entities.player) i.checkCollisions();
+        for (let o of entities.bullets) o.checkCollisions(true, false);
+        for (let o of entities.badBullets) o.checkCollisions(false, true)
+        for (let o of entities.faller) o.checkCollisions();
+        for (let o of entities.enemies) o.checkCollisions(o.chargeHitter);
+        for (let o of entities.swinger) o.checkCollisions();
     };
 
     drawBullets() {
-        for (let b of bullets) {
+        for (let b of entities.bullets) {
             if (!b.ultimate) {b.checkBorders()}; //only ultimate doesnt care about borders
             b.drawBullets();
         };
 
-        for (let b of badBullets) {
+        for (let b of entities.badBullets) {
             if (b.badLaser) {
                 b.drawBadLaser();
             } else {
@@ -92,7 +92,7 @@ export class Animate { //list all functions needed in animate func
     };
 
     drawFaller() {
-        for (let o of faller) {
+        for (let o of entities.faller) {
             o.checkBorders();
         
             if (o.damaged && o.cooldown < 3) {
@@ -107,7 +107,7 @@ export class Animate { //list all functions needed in animate func
     };
 
     drawSingleShooter() {
-        for (let b of enemies) {
+        for (let b of entities.enemies) {
             if (!b.singleShooter) continue;
             if (b.fireBossCooldown <= 0) {
                 b.shootBossBullet(b, false);
@@ -130,7 +130,7 @@ export class Animate { //list all functions needed in animate func
     };
     
     drawSpreadShooter() {
-        for (let b of enemies) {
+        for (let b of entities.enemies) {
             if (!b.spreadShooter) continue;
             if (b.fireBossCooldown <= 0) {
                 b.shootBossBullet(b, false);
@@ -152,7 +152,7 @@ export class Animate { //list all functions needed in animate func
     };
 
     drawChargeHitter() {
-        for (let b of enemies) {
+        for (let b of entities.enemies) {
             if (!b.chargeHitter) continue;
             if (b.fireBossCooldown <= 0) {
                 b.shootBossBullet(b, false);
@@ -180,7 +180,7 @@ export class Animate { //list all functions needed in animate func
     };
 
     drawLaserShooter() {
-        for (let b of enemies) {
+        for (let b of entities.enemies) {
             if (!b.laserShooter) continue;
             if (b.fireBossCooldown <= 0) {
                 b.shootBossBullet(b, false);
@@ -203,15 +203,15 @@ export class Animate { //list all functions needed in animate func
     };
 
     drawSwinger() {
-        for (let o1 of swinger) {
+        for (let o1 of entities.swinger) {
             o1.checkBorders();
             o1.drawPendulum();
         };
     };
 
     filterBullets() { //doesnt work bcs its using vars from another module
-        bullets = bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
-        badBullets = badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
+        entities.bullets = entities.bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
+        entities.badBullets = entities.badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
     };
 }
 

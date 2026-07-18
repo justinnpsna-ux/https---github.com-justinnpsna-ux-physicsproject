@@ -4,7 +4,7 @@ import { canvas, ctx, nextCircleId, cellSize,
     interacted } from './index.js';
 
 //arrays
-import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
 
 //sound
 import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
@@ -72,7 +72,7 @@ class Boss {
 
     getAngle(boss) {
         if (!isPlayerCreated || !interacted) return;
-        let p = player[0];
+        let p = entities.player[0];
 
         let speed = 40;
 
@@ -203,7 +203,7 @@ export class SingleShooter extends Boss {
 
     shootBossBullet(boss, big) {
         if (!isPlayerCreated || !interacted) return;
-        let p = player[0];
+        let p = entities.player[0];
 
         let speed = 40;
 
@@ -227,7 +227,7 @@ export class SingleShooter extends Boss {
         if (big) o.radius = 25;
 
         o.bullet = true;
-        badBullets.push(o); // array is in another module.!!!!!
+        entities.badBullets.push(o); // array is in another module.!!!!!
         playSound('SFXheehaw.mp3');
     };
 
@@ -270,7 +270,7 @@ export class SpreadShooter extends Boss {
 
     shootBossBullet(boss, big) {
         if (!isPlayerCreated || !interacted) return;
-        let p = player[0];
+        let p = entities.player[0];
 
         let speed = 20;
 
@@ -287,7 +287,7 @@ export class SpreadShooter extends Boss {
             if (big) o.radius = 25;
 
             o.bullet = true;
-            badBullets.push(o);
+            entities.badBullets.push(o);
             angle += Math.PI / 4;
             bulletNumber++
         }
@@ -335,7 +335,7 @@ export class ChargeHitter extends Boss {
 
     shootBossBullet(boss) { 
         if (!isPlayerCreated || !interacted) return;
-        let p = player[0];
+        let p = entities.player[0];
 
         let speed = 80;
 
@@ -409,7 +409,7 @@ export class LaserShooter extends Boss {
     async shootBossBullet(boss, big) {
         if (!isPlayerCreated || !interacted) return; 
   
-        let p = player[0]; 
+        let p = entities.player[0]; 
         let knockback = 1; 
         let dx = p.x - boss.x; 
         let dy = p.y - boss.y; 
@@ -435,7 +435,7 @@ export class LaserShooter extends Boss {
 
         }
         
-        badBullets.push(o); 
+        entities.badBullets.push(o); 
         o.checkCollisions() //bad laser coll check doesnt work on MODanimate
         //if (!o.warningLaser) console.log(badBullets);
         boss.fireBossCooldown = 0; 

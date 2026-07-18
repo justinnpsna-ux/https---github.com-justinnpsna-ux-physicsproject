@@ -5,7 +5,9 @@ import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODb
 import { Bullet, BadBullet } from './MODbullet.js'
 
 //arrays
-import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+
+import { levelManager } from './index.js'
 
 //rng lol
 import { getRng, canvas, ctx } from './index.js'
@@ -16,26 +18,31 @@ export class LevelManager {
 
         this.levels = [
             {
+                isBeat: false,
                 name: "Level 1: thats a lot of balls",
                 spawnBall: 10
             },
             {
+                isBeat: false,
                 name: "Level 2: great... even more balls",
                 spawnBall: 10,
                 spawnSingleShooter: 1
             },
             {
+                isBeat: false,
                 name: "Level 3: take a load of these balls",
                 spawnBall: 5,
                 spawnSingleShooter: 2
             },
             {
+                isBeat: false,
                 name: "Level 4: wow. EVEN MORE BALLS",
                 spawnBall: 5,
                 spawnSingleShooter: 1,
                 spawnSpreadShooter: 2
             },
             {
+                isBeat: false,
                 name: "Level 5: we might be cooked",
                 spawnBall: 10,
                 spawnSingleShooter: 1,
@@ -43,6 +50,7 @@ export class LevelManager {
                 spawnChargeHitter: 2
             },
             {
+                isBeat: false,
                 name: "Level 6: balls galore",
                 spawnBall: 5,
                 spawnSingleShooter: 3,
@@ -50,6 +58,7 @@ export class LevelManager {
                 spawnChargeHitter: 3
             },
             {
+                isBeat: false,
                 name: "Level 7: is that darth vader",
                 spawnBall: 30,
                 spawnSingleShooter: 1,
@@ -58,6 +67,7 @@ export class LevelManager {
                 spawnLaserShooter: 1
             },
             {
+                isBeat: false,
                 name: "Level 8: why is everything red",
                 spawnBall: 10,
                 spawnSingleShooter: 2,
@@ -65,6 +75,7 @@ export class LevelManager {
                 spawnLaserShooter: 3
             },
             {
+                isBeat: false,
                 name: "Level 9: u gotta be kidding me",
                 spawnBall: 20,
                 spawnSpreadShooter: 1,
@@ -78,7 +89,8 @@ export class LevelManager {
 
     startCurrentLevel() {
         for (let [key, value] of Object.entries(this.levels[this.currentLevelIndex])) {
-            if (key == "name") { //if name, skip
+            if (key == "isBeat") continue;
+            if (key == "name") { //if name, isBeat, skip
                 console.log(value);
                 continue;
             };
@@ -106,8 +118,9 @@ export class LevelManager {
     }
 
     getSuccess() {
-        if (faller.length > 0 || enemies.length > 0) return;
-        console.warn("NICE! next level...");
+        if (entities.faller.length > 0 || entities.enemies.length > 0) return;
+        this.levels[this.currentLevelIndex].isBeat = true;
+        console.log("next level!!")
         this.nextLevel();
         this.startCurrentLevel();
     }
@@ -123,31 +136,31 @@ const spawnFunctions = {
 
 export function spawnBall() {
     let o = new Circle(getRng(0, canvas.width), getRng(0, canvas.height / 2), getRng(15, 25), getRng(-5, 5), getRng(-5, 5), 0, 0);
-    faller.push(o);
+    entities.faller.push(o);
 };
 
 export function spawnSingleShooter() {
     let o = new SingleShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 50, 0, 0, 0, 0, 0);
     o.fireBossCooldown = 100;
-    enemies.push(o);
+    entities.enemies.push(o);
 };
 
 export function spawnSpreadShooter() {
     let o = new SpreadShooter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 30, 0, 0, 0, 0);
     o.fireBossCooldown = 200;
-    enemies.push(o);
+    entities.enemies.push(o);
 };
 
 export function spawnChargeHitter() {
     let o = new ChargeHitter(getRng(0, canvas.width), getRng(0, canvas.height / 3), 60, 0, 0, 0, 0);
     o.fireBossCooldown = 200;
-    enemies.push(o);
+    entities.enemies.push(o);
 };
 
 export function spawnLaserShooter() {
     let o = new LaserShooter(getRng(0, canvas.width), getRng(0, canvas.height / 4), 60, 0, 0, 0, 0);
     o.fireBossCooldown = 100;
-    enemies.push(o);
+    entities.enemies.push(o);
 };
 
 //levels buttons
@@ -156,10 +169,18 @@ const levelsPage = document.getElementById('levelsPage');
 const openBtn = document.getElementById('openBtn');
 const closeBtn = document.getElementById('closeBtn');
 
+const level1Btn = document.getElementById('level1');
+
 openBtn.addEventListener('click', () => {
-  levelsPage.classList.remove('hidden');
+    levelsPage.classList.remove('hidden');
 });
 
 closeBtn.addEventListener('click', () => {
-  levelsPage.classList.add('hidden');
+    levelsPage.classList.add('hidden');
+});
+
+level1Btn.addEventListener('click', () => {
+    levelsPage.classList.add('hidden');
+    levelManager.currentLevelIndex = 6;
+    levelManager.startCurrentLevel();
 });

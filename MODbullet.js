@@ -4,7 +4,7 @@ import { canvas, ctx, nextCircleId, cellSize,
     interacted } from './index.js';
 
 //arrays
-import { player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
 
 //sound
 import { playSound, sfxLimit, sfxPool, sfxPoolIndex } from './index.js';
@@ -279,7 +279,7 @@ export class BadLaser extends Bullet {
     checkCollisions(exceptPlayer, exceptEnemies) {
         if (this.warningLaser === true || this.warningLaser === null) return;
 
-        let p = player[0];
+        let p = entities.player[0];
         let knockback = 50;
         let laserWidth = 50;
 
