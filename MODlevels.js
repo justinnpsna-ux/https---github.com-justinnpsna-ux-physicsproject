@@ -5,7 +5,7 @@ import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODb
 import { Bullet, BadBullet } from './MODbullet.js'
 
 //arrays
-import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities, sfxPool } from './index.js'
 
 import { levelManager } from './index.js'
 
@@ -81,9 +81,13 @@ export class LevelManager {
                 spawnSpreadShooter: 1,
                 spawnChargeHitter: 5,
                 spawnLaserShooter: 5
+            },
+            {
+                isBeat: false,
+                name: "Level 10: everything is literally red",
+                spawnBall: 20,
+                spawnLaserShooter: 15
             }
-
-
         ]
     }
 
@@ -115,6 +119,16 @@ export class LevelManager {
     nextLevel() {
         if (this.currentLevelIndex == this.levels.length - 1) return false;
         this.currentLevelIndex++;
+    }
+
+    resetLevel() {
+        entities.enemies = [];
+        entities.faller = [];
+
+        entities.bullets =[];
+        entities.badBullets = [];
+
+        sfxPool.pool = [];
     }
 
     getSuccess() {
@@ -164,12 +178,11 @@ export function spawnLaserShooter() {
 };
 
 //levels buttons
+let levelNumber = 1;
 
 const levelsPage = document.getElementById('levelsPage');
 const openBtn = document.getElementById('openBtn');
 const closeBtn = document.getElementById('closeBtn');
-
-const level1Btn = document.getElementById('level1');
 
 openBtn.addEventListener('click', () => {
     levelsPage.classList.remove('hidden');
@@ -179,8 +192,22 @@ closeBtn.addEventListener('click', () => {
     levelsPage.classList.add('hidden');
 });
 
-level1Btn.addEventListener('click', () => {
-    levelsPage.classList.add('hidden');
-    levelManager.currentLevelIndex = 6;
-    levelManager.startCurrentLevel();
-});
+export function levelButtons() {
+    const buttons = document.querySelectorAll('.level');
+
+    buttons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+            levelManager.resetLevel();
+            levelsPage.classList.add('hidden');
+            
+            levelManager.currentLevelIndex = index; 
+            levelManager.startCurrentLevel();
+            levelManager.startCurrentLevel();
+            levelManager.startCurrentLevel();
+            levelManager.startCurrentLevel();
+            levelManager.startCurrentLevel();
+            levelManager.startCurrentLevel();
+        });
+    });
+}
+

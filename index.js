@@ -2,7 +2,7 @@ import { Player, playerMoveSet } from './MODplayer.js'
 import { Circle } from './MODcircle.js'
 import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODboss.js'
 import { Bullet, BadBullet, BadLaser } from './MODbullet.js'
-import { LevelManager } from './MODlevels.js'
+import { levelButtons, LevelManager } from './MODlevels.js'
 import { Animate } from './MODanimate.js'
 import { GameState } from './MODgameState.js'
 
@@ -46,11 +46,11 @@ let dropRNG;
 
 //sfx
 export const sfxLimit = 10;
-export let sfxPool = [];
+export let sfxPool = {pool: []};
 export let sfxPoolIndex = 0;
 
 export function playSound(fileName) {
-    let sound = sfxPool[sfxPoolIndex];
+    let sound = sfxPool.pool[sfxPoolIndex];
     sound = new Audio(fileName)
 
     sound.currentTime = 0;
@@ -74,14 +74,6 @@ let clickedCircle = null;
 let lastX = 0;
 let lastY = 0;
 let lastTime = 0;
-
-//arrays
-export let faller = [];
-export let enemies = []; 
-export let swinger = [];
-export let player = [];
-export let bullets = [];
-export let badBullets = [];
 
 export let entities = { 
     faller: [],
@@ -213,7 +205,7 @@ canvas.addEventListener('mousedown', (event) => {
     let mouse = getMousePos(event);
     interacted = true;
 
-    clickedCircle = faller.find(o => {
+    clickedCircle = entities.faller.find(o => {
         let dx = mouse.x - o.x;
         let dy = mouse.y - o.y;
         let distance = Math.sqrt(dx * dx + dy * dy);
@@ -278,20 +270,27 @@ function createPlayer() {
 };
 
 function handleEnemyDeath() {
-    let oldFaller = faller.length;
-    faller = faller.filter(o => o.health > 0);
-    let newFaller = faller.length;
+    let oldFaller = entities.faller.length;
+    entities.faller = entities.faller.filter(o => o.health > 0);
+    let newFaller = entities.faller.length;
     destroyedCounter += oldFaller - newFaller;
 
-    let oldEnemies = enemies.length;
-    enemies = enemies.filter(o => o.health > 0);
-    let newEnemies = enemies.length;
+    let oldEnemies = entities.enemies.length;
+    entities.enemies = entities.enemies.filter(o => o.health > 0);
+    let newEnemies = entities.enemies.length;
     destroyedCounter += (oldEnemies - newEnemies) * 5;
 
     if (oldFaller - newFaller > 0) playSound('SFXmimimi.mp3');
     if (oldEnemies - newEnemies > 0) playSound('SFXdead.mp3'); //boss dead sound
 }
 
+levelButtons();
 createPlayer();
 levelManager.startCurrentLevel();
 animate();
+
+document.addEventListener('click', (event) => {
+  if (event.target.tagName === 'BUTTON') {
+    event.target.blur();
+  }
+}); //to unselect buttons after clicking!!!!!

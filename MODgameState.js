@@ -4,7 +4,7 @@ import { canvas, ctx, nextCircleId, cellSize,
     interacted } from './index.js';
 
 //arrays
-import { entities, player, faller, enemies, bullets, badBullets, swinger } from './index.js'
+import { entities } from './index.js'
 
 export class GameState { 
     constructor(state) {
