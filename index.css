@@ -67,12 +67,51 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 100vw;          /* Exactly 25% of viewport width */
-    height: 100vh;        /* Full viewport height */
-    background-color: #ffffff99;
+    width: 100vw;         
+    height: 100vh;        
+    background-color: #35c56a99;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease-in-out; /* Smooth slide effect */
-    z-index: 10000;        /* Ensures it sits on top of all other content */
+    transition: transform 0.3s ease-in-out;
+    z-index: 10000;       
+}
+
+.win-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.win-content .button {
+    background-color: #ffffff; 
+    font-size: 50px;
+    border: 0px;
+    border-radius: 100px;
+
+    margin-left: 50px;
+    margin-right: 50px;
+
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    padding-left: 20px;   
+    padding-right: 20px;  
+    padding: 10px 20px; 
+
+    cursor: pointer;
+}
+
+.win-content .button:hover {
+  background-color: rgb(103, 129, 143); /* Changes color on hover */
+  cursor: pointer;        /* Shows a hand cursor */
+}
+
+/*
+  */
+
+#winHeader {
+    text-align: center;
+    font-size: 100px;
+    color: rgb(254, 254, 255);
 }
 
 .win.hidden {

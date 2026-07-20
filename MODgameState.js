@@ -1,11 +1,9 @@
-//module for game state class
+//module for game state class (were gonna use html instead of this!)
 import { canvas, ctx, nextCircleId, cellSize, 
     totalColumns, grid, cellChecks, isPlayerCreated, 
     interacted } from './index.js';
 
-//arrays
-import { entities } from './index.js'
-
+import { entities, levelManager } from './index.js'
 export class GameState { 
     constructor(state) {
         this.state = "MAINMENU";
@@ -62,25 +60,29 @@ function screenShake(multiplier) { //new feature
 
 }
 
-/*
-canvas.addEventListener('click', (event) => {
-    if (gameState !== "MENU") return;
-    
-    // Get mouse coordinates relative to canvas
-    let rect = canvas.getBoundingClientRect();
-    let mouseX = event.clientX - rect.left;
-    let mouseY = event.clientY - rect.top;
+//levels buttons
+export const winMenu = document.getElementById('winMenu');
+const retryLevelBtn = document.getElementById('retryLevelBtn');
+const pauseLevelBtn = document.getElementById('pauseLevelBtn');
+const nextLevelBtn = document.getElementById('nextLevelBtn');
 
-    // Check if mouse is inside the button bounding box (X: 150-350, Y: 250-300)
-    if (mouseX >= 150 && mouseX <= 350 && mouseY >= 250 && mouseY <= 300) {
-        if (this.state == "MAINMENU") {
-            this.state = "PLAYING";
-        }
-
-        if (this.state == "DEATHMENU") {
-            this.state = "";
-        }
-    }
+retryLevelBtn.addEventListener('click', () => {
+    winMenu.classList.add('hidden');
+    levelManager.resetLevel();
+    levelManager.startCurrentLevel();
 });
 
-*/
+pauseLevelBtn.addEventListener('click', () => {
+    winMenu.classList.add('hidden');
+    levelManager.resetLevel();
+    levelManager.startCurrentLevel(0);
+});
+
+nextLevelBtn.addEventListener('click', () => {
+    winMenu.classList.add('hidden');
+    levelManager.resetLevel();
+    levelManager.nextLevel();
+    levelManager.startCurrentLevel();
+});
+
+

@@ -12,6 +12,7 @@ import { levelManager } from './index.js'
 //rng lol
 import { getRng, canvas, ctx } from './index.js'
 
+import { winMenu } from './MODgameState.js'
 export class LevelManager {
     constructor() {
         this.currentLevelIndex = 0;
@@ -91,8 +92,9 @@ export class LevelManager {
         ]
     }
 
-    startCurrentLevel() {
-        for (let [key, value] of Object.entries(this.levels[this.currentLevelIndex])) {
+    startCurrentLevel(index) {
+        if (index === undefined) index = this.currentLevelIndex;
+        for (let [key, value] of Object.entries(this.levels[index])) {
             if (key == "isBeat") continue;
             if (key == "name") { //if name, isBeat, skip
                 console.log(value);
@@ -134,9 +136,8 @@ export class LevelManager {
     getSuccess() {
         if (entities.faller.length > 0 || entities.enemies.length > 0) return;
         this.levels[this.currentLevelIndex].isBeat = true;
-        console.log("next level!!")
-        this.nextLevel();
-        //this.startCurrentLevel();
+        this.resetLevel();
+        winMenu.classList.remove('hidden');
     }
 
 };
