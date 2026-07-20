@@ -61,3 +61,20 @@
 .levels.hidden {
     transform: translateX(100%);
 }
+
+/* WIN LEVEL SCREEN */
+.win {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;          /* Exactly 25% of viewport width */
+    height: 100vh;        /* Full viewport height */
+    background-color: #ffffff99;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out; /* Smooth slide effect */
+    z-index: 10000;        /* Ensures it sits on top of all other content */
+}
+
+.win.hidden {
+    transform: translateY(-100%);
+}

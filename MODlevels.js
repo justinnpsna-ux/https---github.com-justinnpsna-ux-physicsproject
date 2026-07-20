@@ -86,7 +86,7 @@ export class LevelManager {
                 isBeat: false,
                 name: "Level 10: everything is literally red",
                 spawnBall: 20,
-                spawnLaserShooter: 15
+                spawnSingleShooter: 30
             }
         ]
     }
@@ -136,8 +136,9 @@ export class LevelManager {
         this.levels[this.currentLevelIndex].isBeat = true;
         console.log("next level!!")
         this.nextLevel();
-        this.startCurrentLevel();
+        //this.startCurrentLevel();
     }
+
 };
 
 const spawnFunctions = {
@@ -178,8 +179,6 @@ export function spawnLaserShooter() {
 };
 
 //levels buttons
-let levelNumber = 1;
-
 const levelsPage = document.getElementById('levelsPage');
 const openBtn = document.getElementById('openBtn');
 const closeBtn = document.getElementById('closeBtn');
@@ -201,11 +200,6 @@ export function levelButtons() {
             levelsPage.classList.add('hidden');
             
             levelManager.currentLevelIndex = index; 
-            levelManager.startCurrentLevel();
-            levelManager.startCurrentLevel();
-            levelManager.startCurrentLevel();
-            levelManager.startCurrentLevel();
-            levelManager.startCurrentLevel();
             levelManager.startCurrentLevel();
         });
     });

@@ -7,6 +7,14 @@
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
+    <div id="winPage" class="win hidden">
+        <h2 id="winHeader">level beat!</h2>
+        <div class="win-content">
+            <button id="retryLevelBtn">retry</button>
+            <button id="nextLevelBtn">next level</button>
+        </div>
+    </div>
+
     <canvas id="canvas" width="800" height="600" style="border: 1px solid #000;">
     </canvas>
     <h4 style="margin-top: -2;">time: <span id="timer" type="number"></span></h4>
