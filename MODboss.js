@@ -49,6 +49,15 @@ class Boss {
         this.y += this.vy * dt;
     }
 
+    drawDeath() {
+        if (this.health > 0) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#ff0000';
+        ctx.fill();
+        ctx.closePath();
+    }
+
     drawDamage() {
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);

@@ -5,8 +5,8 @@ import { Bullet, BadBullet, BadLaser } from './MODbullet.js'
 import { levelButtons, LevelManager } from './MODlevels.js'
 import { Animate } from './MODanimate.js'
 import { GameState } from './MODgameState.js'
-
 import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter, spawnLaserShooter } from './MODlevels.js'
+import { PointsCounter } from './MODpoints.js'
 
 export const canvas = document.getElementById('canvas');
 export const ctx = canvas.getContext('2d');
@@ -21,6 +21,8 @@ export const levelManager = new LevelManager();
 
 //animate functions
 const animateFunc = new Animate();
+
+const pointsCounter = new PointsCounter();
 
 //all button features. keep
 const freeFall = document.getElementById("freefall");
@@ -137,12 +139,11 @@ function animate() {
     entities.badBullets = entities.badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
 
     //point system
-    handleEnemyDeath();
+    pointsCounter.handleEnemyDeath();
     document.getElementById('counter').textContent = destroyedCounter;
 
     //health death system
     if (entities.player[0].health <= 0 && !immortal) { 
-        //window.alert("u dided lol....") 
         entities.player = [];
         isPlayerCreated = false;
         gameState.drawDeathMenu();
@@ -268,21 +269,6 @@ function createPlayer() {
 
     isPlayerCreated = true;
 };
-
-function handleEnemyDeath() {
-    let oldFaller = entities.faller.length;
-    entities.faller = entities.faller.filter(o => o.health > 0);
-    let newFaller = entities.faller.length;
-    destroyedCounter += oldFaller - newFaller;
-
-    let oldEnemies = entities.enemies.length;
-    entities.enemies = entities.enemies.filter(o => o.health > 0);
-    let newEnemies = entities.enemies.length;
-    destroyedCounter += (oldEnemies - newEnemies) * 5;
-
-    if (oldFaller - newFaller > 0) playSound('SFXmimimi.mp3');
-    if (oldEnemies - newEnemies > 0) playSound('SFXdead.mp3'); //boss dead sound
-}
 
 levelButtons();
 createPlayer();
