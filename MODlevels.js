@@ -13,10 +13,11 @@ import { levelManager } from './index.js'
 import { getRng, canvas, ctx } from './index.js'
 
 import { winMenu } from './MODgameState.js'
+import { upgradeMenu } from './MODupgrade.js'
 export class LevelManager {
     constructor() {
         this.currentLevelIndex = 0;
-
+        this.pause = false;
         this.levels = [
             {
                 isBeat: false,
@@ -134,10 +135,19 @@ export class LevelManager {
     }
 
     getSuccess() {
+        if (this.levels[this.currentLevelIndex].isBeat) return;
         if (entities.faller.length > 0 || entities.enemies.length > 0) return;
         this.levels[this.currentLevelIndex].isBeat = true;
         this.resetLevel();
-        winMenu.classList.remove('hidden');
+        upgradeMenu.classList.remove('hidden');
+        //this.getUpgradeMenu()
+    }
+
+    getUpgradeMenu() { //implement upgrade in certain level
+        console.log(upgradeMenu.classList.value.includes('hidden'))
+        if (!this.levels[this.currentLevelIndex].isBeat) return;
+        //if (!this.levels[this.currentLevelIndex].upgrade) return;
+        if (upgradeMenu.classList.value.includes('hidden')) upgradeMenu.classList.remove('hidden');
     }
 
 };
@@ -192,16 +202,26 @@ closeBtn.addEventListener('click', () => {
     levelsPage.classList.add('hidden');
 });
 
+export function unlockNextLevel() {
+    const buttons = document.querySelectorAll('.level');
+    let index = levelManager.currentLevelIndex; 
+    if (levelManager.levels[index].isBeat) {
+        buttons[index + 1].classList.add('access');
+    }
+}
+
 export function levelButtons() {
     const buttons = document.querySelectorAll('.level');
 
     buttons.forEach((btn, index) => {
         btn.addEventListener('click', () => {
-            levelManager.resetLevel();
-            levelsPage.classList.add('hidden');
-            
-            levelManager.currentLevelIndex = index; 
-            levelManager.startCurrentLevel();
+            console.log(levelManager.levels[index].isBeat)
+            if (buttons[index].classList.value.includes('access')) {
+                levelsPage.classList.add('hidden');
+                levelManager.resetLevel();
+                levelManager.startCurrentLevel(index);
+                levelManager.currentLevelIndex = index;
+            }
         });
     });
 }

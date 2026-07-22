@@ -75,7 +75,7 @@ retryLevelBtn.addEventListener('click', () => {
 pauseLevelBtn.addEventListener('click', () => {
     winMenu.classList.add('hidden');
     levelManager.resetLevel();
-    levelManager.startCurrentLevel(0);
+    levelManager.pause = true;
 });
 
 nextLevelBtn.addEventListener('click', () => {

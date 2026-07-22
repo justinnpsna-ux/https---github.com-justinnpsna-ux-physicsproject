@@ -2,7 +2,7 @@ import { Player, playerMoveSet } from './MODplayer.js'
 import { Circle } from './MODcircle.js'
 import { SingleShooter, SpreadShooter, ChargeHitter, LaserShooter } from './MODboss.js'
 import { Bullet, BadBullet, BadLaser } from './MODbullet.js'
-import { levelButtons, LevelManager } from './MODlevels.js'
+import { levelButtons, LevelManager, unlockNextLevel } from './MODlevels.js'
 import { Animate } from './MODanimate.js'
 import { GameState } from './MODgameState.js'
 import { spawnBall, spawnChargeHitter, spawnSingleShooter, spawnSpreadShooter, spawnLaserShooter } from './MODlevels.js'
@@ -152,6 +152,8 @@ function animate() {
 
     //to check if there are no enemies to move on levels
     levelManager.getSuccess();
+
+    unlockNextLevel();
 
     requestAnimationFrame(animate);
 };

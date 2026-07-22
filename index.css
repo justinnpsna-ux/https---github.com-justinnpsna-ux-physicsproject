@@ -18,17 +18,18 @@
 }
 
 #levelsHeader {
-    margin-left: 20;  
+    margin-left: 20px;  
+    margin-bottom: -10px;
 }
 
 /* Close button style */
 #closeBtn {
-    margin-top: -50;  
+    margin-top: -50px;  
     position: absolute;
-    top: 10px;
+    top: 30px;
     right: 15px;
     font-size: 24px;
-    background: none;
+    background: rgba(255, 0, 0, 0.266);
     border: 1px solid black;
     border-radius: 15px;
     cursor: pointer;
@@ -46,12 +47,24 @@
 }
 
 .level {
-    margin-right: 3;  
-    margin-top: 5;  
+    background-color: gray;
+    margin-right: 3px;  
+    margin-top: 5px;  
     width: 35px;
     text-align: center;
     font-size: 18px;
-    background: none;
+    border: 1px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.level.access {
+    background-color: white;
+    margin-right: 3px;  
+    margin-top: 5px;  
+    width: 35px;
+    text-align: center;
+    font-size: 18px;
     border: 1px solid black;
     border-radius: 5px;
     cursor: pointer;
@@ -105,9 +118,6 @@
   cursor: pointer;        /* Shows a hand cursor */
 }
 
-/*
-  */
-
 #winHeader {
     text-align: center;
     font-size: 100px;
@@ -116,4 +126,57 @@
 
 .win.hidden {
     transform: translateY(-100%);
+}
+
+/* UPGRADES SCREEN */
+.upgrade {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100vw;         
+    height: 100vh;        
+    background-color: #353cc599;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+    z-index: 10000;       
+}
+
+.upgrade-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+.upgrade-content .upgradeBtn {
+    background-color: #ffffff; 
+    font-size: 50px;
+    border: 0px;
+    border-radius: 100px;
+
+    margin-left: 50px;
+    margin-right: 50px;
+
+    padding-top: 10px; 
+    padding-bottom: 10px; 
+    padding-left: 20px;   
+    padding-right: 20px;  
+    padding: 10px 20px; 
+
+    cursor: pointer;
+}
+
+.upgrade-content .upgradeBtn:hover {
+  background-color: rgb(103, 129, 143); /* Changes color on hover */
+  cursor: pointer;        /* Shows a hand cursor */
+}
+
+#upgradeHeader {
+    text-align: center;
+    font-size: 100px;
+    color: rgb(254, 254, 255);
+}
+
+.upgrade.hidden {
+    transform: translateY(100%);
 }

@@ -15,6 +15,7 @@ import { BadBullet, Bullet } from './MODbullet.js'
 export const playerStatsOriginal = //so we have a copy at all times
 {   health: 10,
     bulletDamage: 1,
+    bulletSize: 3,
     movementSpeed: 10,
     dashDistance: 200,
 
@@ -26,6 +27,7 @@ export const playerStatsOriginal = //so we have a copy at all times
 export const playerStats = //so we can do power ups (maybe use points to buy?)
 {   health: 10,
     bulletDamage: 1,
+    bulletSize: 3,
     movementSpeed: 10,
     dashDistance: 200,
 
@@ -233,7 +235,7 @@ function shootBullet(player) {
     let bvx = Math.cos(angle) * speed;
     let bvy = Math.sin(angle) * speed;
     let o = new Bullet(player.x + (player.radius + 5) * Math.cos(angle), 
-    player.y + (player.radius + 5) * Math.sin(angle), 3, bvx, bvy, 0, 0, 0);
+    player.y + (player.radius + 5) * Math.sin(angle), playerStats.bulletSize, bvx, bvy, 0, 0, 0);
     o.mass = 0.1;
 
     entities.bullets.push(o);

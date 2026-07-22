@@ -14,12 +14,11 @@
     <h1 class="gameHeader">health: <span id="playerhealth" type="number"></span><h1>
     <h1 class="gameHeader">points: <span id="counter" type="number"></span><h1></h1>
 
-
     <button id="openBtn"><< levels</button>
     <div id="levelsPage" class="levels hidden">
         <h2 id="levelsHeader">Levels</h2>
         <div class="levels-content">
-            <button id="level1" class="level">1</button>
+            <button id="level1" class="level access">1</button>
             <button id="level2" class="level">2</button>
             <button id="level3" class="level">3</button>
             <button id="level4" class="level">4</button>
@@ -42,6 +41,15 @@
         </div>
     </div>
 
+    <div id="upgradeMenu" class="upgrade hidden">
+        <h2 id="upgradeHeader">choose one:</h2>
+        <div class="upgrade-content">
+            <button id="upgrade1Btn" class="upgradeBtn"><span id="upgrade1">1</span></button>
+            <button id="upgrade2Btn" class="upgradeBtn"><span id="upgrade2">2</span></button>
+            <button id="upgrade3Btn" class="upgradeBtn"><span id="upgrade3">3</span></button>
+        </div>
+    </div>
+
 </body>
 
 <button id="freefall">Free Fall</button>
@@ -57,5 +65,7 @@
 <script type="module" src="MODboss.js"></script>
 <script type="module" src="MODbullet.js"></script>
 <script type="module" src="MODcircle.js"></script>
+<script type="module" src="MODupgrade.js"></script>
 <script type="module" src="MODlevels.js"></script>
 <script type="module" src="MODplayer.js"></script>
+
