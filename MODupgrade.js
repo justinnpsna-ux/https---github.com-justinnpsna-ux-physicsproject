@@ -1,7 +1,7 @@
 //module for upgrade class
 import { playerStats, playerStatsOriginal } from "./MODplayer.js";
 import { winMenu } from "./MODgameState.js";
-import { ctx, canvas } from "./index.js";
+import { entities, ctx, canvas, getRng } from "./index.js";
 class Upgrade {
     constructor(health, cooldown, speed, damage, dash, misc) {
         this.health = health;
@@ -13,12 +13,21 @@ class Upgrade {
 
         this.upgradeList = [ //DICTIONARY!!!! i learned by random chance
             { name: "Minigun", desc: "-20% Fire Cooldown", effect: {fireCooldown: -4} },
-            { name: "Megagun", desc: "+100% Bullet Size", effect: {bulletSize: +3}, requires: "Minigun" },
+            { name: "Minimegagun", desc: "+100% Bullet Size", effect: {bulletSize: +3}, requires: "Minigun" },
             { name: "McDonalds world cup meal", desc: "+5 Health", effect: {health: 5} },
             { name: "Chipotle", desc: "-20% Ultimate Cooldown", effect: {ultimateCooldown: -15} }
         ];
     }
+
+    getRandomizedUpgrade() {
+        let index = getRng(0, this.upgradeList.length - 1);
+        return this.upgradeList[index];
+    }
+
 };
+
+export const upgrade = new Upgrade();
+upgrade.getRandomizedUpgrade()
 
 //upgrades buttons
 export const upgradeMenu = document.getElementById('upgradeMenu');
@@ -26,17 +35,29 @@ const upgrade1Btn = document.getElementById('upgrade1Btn');
 const upgrade2Btn = document.getElementById('upgrade2Btn');
 const upgrade3Btn = document.getElementById('upgrade3Btn');
 
+export const upgrade1 = document.getElementById('upgrade1');
+export const upgrade2 = document.getElementById('upgrade2');
+export const upgrade3 = document.getElementById('upgrade3');
+
 upgrade1Btn.addEventListener('click', () => {
+    let name = document.getElementById('upgrade1Name').textContent;
+    entities.player[0].upgrades[name] = true;
+    console.log(entities.player[0]);
     upgradeMenu.classList.add('hidden');
     winMenu.classList.remove('hidden');
 });
 
 upgrade2Btn.addEventListener('click', () => {
+    let name = document.getElementById('upgrade2Name').textContent;
+    entities.player[0].upgrades[name] = true;
+    console.log(entities.player[0].upgrades)
     upgradeMenu.classList.add('hidden');
     winMenu.classList.remove('hidden');
 });
 
 upgrade3Btn.addEventListener('click', () => {
+    let name = document.getElementById('upgrade3Name').textContent;
+    entities.player[0].upgrades[name] = true;
     upgradeMenu.classList.add('hidden');
     winMenu.classList.remove('hidden');
 });

@@ -2,8 +2,8 @@ TODO: devlog
 1. pointsCounter make for loop to check if a boss died so we can drop item
 2. drawDeath() in MODboss
 3. upgrades menu when beating certain levels (make each level have a upgrade: true or false)
-4. lock levels in levels page if the level before is not beaten yet
+4. [DONE] lock levels in levels page if the level before is not beaten yet
 5. pause button should be better? not important rn tho
 6. drawItem()
 7. make lasershooter's hitbox give knockback with this.angle
-8. delta time
+8. delta time on MODanimate

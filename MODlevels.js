@@ -13,7 +13,7 @@ import { levelManager } from './index.js'
 import { getRng, canvas, ctx } from './index.js'
 
 import { winMenu } from './MODgameState.js'
-import { upgradeMenu } from './MODupgrade.js'
+import { upgradeMenu, upgrade } from './MODupgrade.js'
 export class LevelManager {
     constructor() {
         this.currentLevelIndex = 0;
@@ -140,7 +140,21 @@ export class LevelManager {
         this.levels[this.currentLevelIndex].isBeat = true;
         this.resetLevel();
         upgradeMenu.classList.remove('hidden');
+        this.getUpgrades();
         //this.getUpgradeMenu()
+    }
+
+    getUpgrades() {
+        let upgrade1 = upgrade.getRandomizedUpgrade();
+        let upgrade2 = upgrade.getRandomizedUpgrade();
+        let upgrade3 = upgrade.getRandomizedUpgrade();
+        document.getElementById('upgrade1Name').textContent = upgrade1.name;
+        document.getElementById('upgrade2Name').textContent = upgrade2.name;
+        document.getElementById('upgrade3Name').textContent = upgrade3.name;
+
+        document.getElementById('upgrade1Desc').textContent = upgrade1.desc;
+        document.getElementById('upgrade2Desc').textContent = upgrade2.desc;
+        document.getElementById('upgrade3Desc').textContent = upgrade3.desc;
     }
 
     getUpgradeMenu() { //implement upgrade in certain level

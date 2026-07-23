@@ -12,9 +12,11 @@ import { playerMoveSet } from './MODplayer.js';
 //sound
 import { playSound } from './index.js';
 
-export class Animate { //list all functions needed in animate func
-    constructor() {
 
+//use delta time here. make the function here
+export class Animate { //list all functions needed in animate func
+    constructor(deltaTime) {
+        this.deltaTime = deltaTime;
     }
     
     clearCells() {
@@ -214,37 +216,3 @@ export class Animate { //list all functions needed in animate func
         entities.badBullets = entities.badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
     };
 }
-
-/*
-function animate() {
-    //if (singleshooter.length === 0 && faller.length === 0) {window.alert("yaou winN!!!"); };
-    bullets = bullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 100);
-    badBullets = badBullets.filter(b => b.toDelete == false && Math.abs(b.vx) + Math.abs(b.vy) >= 10);
-
-    //point system
-    let oldFaller = faller.length;
-    faller = faller.filter(o => o.health > 0);
-    let newFaller = faller.length;
-    destroyedCounter += oldFaller - newFaller;
-
-    let oldBoss = singleshooter.length;
-    singleshooter = singleshooter.filter(o => o.health > 0);
-    let newBoss = singleshooter.length;
-    destroyedCounter += (oldBoss - newBoss) * 5;
-
-    let oldBoss2 = spreadshooter.length;
-    spreadshooter = spreadshooter.filter(o => o.health > 0);
-    let newBoss2 = spreadshooter.length;
-    destroyedCounter += (oldBoss2 - newBoss2) * 5;
-
-    document.getElementById('counter').textContent = destroyedCounter;
-
-    if (player[0].health <= 0 && !immortal) { window.alert("u dided lol....") }
-    document.getElementById('playerhealth').textContent = player[0].health;
-
-    if (oldFaller - newFaller > 0) playSound('SFXmimimi.mp3');
-    if (oldBoss - newBoss > 0 || oldBoss2 - newBoss2 > 0) playSound('SFXdead.mp3'); // singleshooter dead sound
-
-    requestAnimationFrame(animate);
-};
-*/

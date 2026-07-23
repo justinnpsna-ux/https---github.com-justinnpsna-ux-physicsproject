@@ -61,6 +61,8 @@ export class Player {
         this.fireCooldown = 0;
         this.ultimateCooldown = 0;
         this.dashCooldown = 0;
+
+        this.upgrades = {};
     } 
 
     update(dt) {
